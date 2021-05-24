@@ -1,0 +1,10 @@
+SPA - NEW NOTE
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+server-->browser: stays on same page
+
+note over browser:
+fetch form-element, register an event handler for prevention of default form submit and
+ creates a new note object, adds it to notes list, renders notes to display and sends new note to server as JSON-string.
+
+
