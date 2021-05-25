@@ -15,9 +15,11 @@ function App() {
   return (
     <div>
       <Header name={course} />
-     <Content part={part1} exercise={exercises1}/>
-     <Content part={part2} exercise={exercises2}/>
-     <Content part={part3} exercise={exercises3}/>
+     <Content 
+     partOne={part1} exerciseOne={exercises1}
+     partTwo={part2} exerciseTwo={exercises2}
+     partThree={part3} exerciseThree={exercises3}
+     />
      <Total number={exercises1 + exercises2 + exercises3}/>
     </div>
   )
