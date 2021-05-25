@@ -2,9 +2,11 @@ import React from 'react'
 
 const Part = (props) => {
     return (
-        <div>
-       <p>{props.part} : {props.exercise}</p>  
-        </div>
+     
+       <li>
+         <p>{props.name} : {props.exercises}</p>  
+           </li>  
+       
     )
 }
 
