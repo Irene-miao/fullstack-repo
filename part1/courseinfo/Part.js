@@ -4,7 +4,7 @@ const Part = (props) => {
     return (
      
        <li>
-         <p>{props.name} : {props.exercises}</p>  
+         <p>{props.part} : {props.exercise}</p>  
            </li>  
        
     )
