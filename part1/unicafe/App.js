@@ -2,6 +2,8 @@ import "./App.css";
 import React, { useState } from "react";
 import ButtonGrp from "./ButtonGrp";
 import Display from './Display';
+import Statistics from "./Statistics";
+
 
 function App() {
   const [good, setGood] = useState(0);
@@ -23,17 +25,15 @@ function App() {
 
   const all = good+bad+neutral;
   
-  
   const average = all/3;
 
   let percentage;
 
    if (good !== 0) {
-    percentage = <p>positive {(good/all)*100} %</p>
+    percentage = <p>positive &nbsp;  {(good/all)*100} %</p>
    } else {
-     percentage = <p>positive 0 %</p>
+     percentage = <p>positive   0 %</p>
    }
-
 
   return (
     <div className='App'>
@@ -49,12 +49,14 @@ function App() {
       />
      </div>
       <Display title='statistics' />
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>all {all}</p>
-      <p>average {average}</p>
-      <p>{percentage}</p>
+      <Statistics 
+      good={good}
+      neutral={neutral}
+      all={all}
+      bad={bad}
+      average={average}
+      percentage={percentage}
+      />
     </div>
   );
 }
