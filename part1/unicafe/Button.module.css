@@ -1,0 +1,18 @@
+.button {
+    border-radius: 5px;
+    font-size: 14px;
+    color: #FDFDFF;
+    text-align: center;
+    margin-top: 10px;
+    margin-left: 2px;
+};
+
+
+.button[data-value="null"] {
+    pointer-events: none;
+};
+
+.button:hover {
+    background: #8D909B;
+    cursor: default;
+};
