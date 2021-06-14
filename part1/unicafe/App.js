@@ -25,15 +25,15 @@ function App() {
 
   const all = good+bad+neutral;
   
-  const average = all/3;
+  const average = (all/3).toFixed(2);
 
 
     let percent;
 
     if (good !== 0) {
-     percent = <p>positive &nbsp;  {(good/all)*100} %</p>
+     percent = <p>&nbsp; {((good/all)*100).toFixed(2)} %</p>
     } else {
-      percent = <p>positive   0 %</p>
+      percent = <p>&nbsp; 0 %</p>
     }
   
 

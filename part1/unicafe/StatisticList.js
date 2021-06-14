@@ -19,7 +19,14 @@ const Statistics = (props) => {
       <Statistic text="bad" value={props.bad} />
       <Statistic text="all" value={props.all} />
       <Statistic text="average" value={props.average} />
-      <p>{props.percent}</p>
+      <table>
+        <tbody>
+          <tr>
+            <td>positive</td>
+            <td>{props.percent}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 };

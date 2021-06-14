@@ -1,9 +1,21 @@
 import React from 'react';
+import classes from './Statistic.module.css';
 
 const Statistic = (props) => {
     return (
         <div>
-             <p>{props.text} &nbsp; {props.value}</p>
+            <table >
+            <colgroup className={classes.row}>
+    <col />
+    <col />
+  </colgroup>
+        <tbody>
+          <tr>
+            <td>{props.text}</td>
+            <td>{props.value}</td>
+          </tr>
+        </tbody>
+      </table>
         </div>
     )
 }

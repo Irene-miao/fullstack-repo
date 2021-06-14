@@ -1,0 +1,5 @@
+.row {
+    width: 65px;
+    justify-content: left;
+    align-items: center;
+}
