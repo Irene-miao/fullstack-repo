@@ -1,5 +1,6 @@
 import "./App.css";
 import React, { useState} from "react";
+import Anecdote from './Anecdote';
 
 function App() {
   const anecdotes = [
@@ -14,6 +15,7 @@ function App() {
 
   const [selected, setSelected] = useState("");
   const [results, setResults] = useState([]);
+  const [maxVote, setMaxVote] = useState({});
   
 
   function getRandomItem() {
@@ -28,40 +30,34 @@ function App() {
       if (anecdote === selected) {
         setResults({...results, [selected]: (results[selected] ?? 0) + 1 });
       }
-     
-    }
+    };
+    let sorted = Object.entries(results).sort((prev, next) => prev[1] - next[2]);
+const max = sorted.pop();
+setMaxVote(max);
   };
 
  console.log(results);
  
- 
-let sorted = Object.entries(results).sort((prev, next) => prev[1] - next[2]);
-const max = sorted.pop();
-console.log(max);
-const string = max[0];
-const value = max[1];
+ console.log(maxVote);
 
 
-   
- 
- 
-
- 
 
   return (
     <div className="App">
-      <h1>Anecdote of the day</h1>
-      <div>{selected}</div>
-      <div>
-     <p>has {results[selected]} votes</p>
-      </div>
+      <Anecdote
+      title='Anecdote of the day'
+      phrase={selected}
+      vote={results[selected]}
+      />
       <button onClick={getVote}>vote</button>
       <button style={{ margin: "10px" }} onClick={getRandomItem}>
         random
       </button>
-      <h1>Anecdote with most votes</h1>
-   <p>{string}</p>
-   <p>has {value} votes</p>
+      <Anecdote 
+        title='Anecdote with most votes'
+     phrase={maxVote[0]}
+     vote={maxVote[1]}
+      />
     </div>
   );
 }
