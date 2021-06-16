@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useState } from "react";
+import React, { useState} from "react";
 
 function App() {
   const anecdotes = [
@@ -13,7 +13,8 @@ function App() {
   ];
 
   const [selected, setSelected] = useState("");
-  const [results, setResults] = useState({});
+  const [results, setResults] = useState([]);
+  
 
   function getRandomItem() {
     const randomIndex = Math.floor(Math.random() * anecdotes.length);
@@ -25,22 +26,42 @@ function App() {
     for (let i = 0; i < anecdotes.length; i++) {
       const anecdote = anecdotes[i];
       if (anecdote === selected) {
-        setResults({ ...anecdotes, [selected]: (results[selected] ?? 0) + 1 });
+        setResults({...results, [selected]: (results[selected] ?? 0) + 1 });
       }
-      console.log(results);
+     
     }
   };
 
+ console.log(results);
+ 
+ 
+let sorted = Object.entries(results).sort((prev, next) => prev[1] - next[2]);
+const max = sorted.pop();
+console.log(max);
+const string = max[0];
+const value = max[1];
+
+
+   
+ 
+ 
+
+ 
+
   return (
     <div className="App">
+      <h1>Anecdote of the day</h1>
       <div>{selected}</div>
       <div>
-     <p>has {results[selected]} votes.</p>
+     <p>has {results[selected]} votes</p>
       </div>
       <button onClick={getVote}>vote</button>
       <button style={{ margin: "10px" }} onClick={getRandomItem}>
         random
       </button>
+      <h1>Anecdote with most votes</h1>
+   <p>{string}</p>
+   <p>has {value} votes</p>
     </div>
   );
 }
