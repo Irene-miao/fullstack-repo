@@ -4,14 +4,16 @@ import React, { useState } from "react";
 
 const App = () => {
   const [ persons, setPersons ] = useState([
-    { name: 'Arto Hellas' }
+    { name: 'Arto Hellas', number: 12345678 }
   ]); 
   const [ newName, setNewName ] = useState('');
+  const [ newNumber, setNewNumber] = useState('');
 
   const addName = (event) => {
     event.preventDefault();
     const nameObject = {
       name: newName,
+      number: newNumber,
     };
     persons.forEach((person) => {
       if (newName === person.name) {
@@ -20,14 +22,19 @@ const App = () => {
       };
     setPersons(persons.concat(nameObject));
     setNewName('');
+    setNewNumber('');
     })
   };
 
-  console.log(persons);
 const handleNameChange = (event) => {
   console.log(event.target.value);
   setNewName(event.target.value);
-}
+};
+
+const handleNumberChange = (event) => {
+  console.log(event.target.value);
+  setNewNumber(event.target.value);
+};
 
   return (
     <div>
@@ -41,6 +48,13 @@ const handleNameChange = (event) => {
          />
         </div>
         <div>
+          number: 
+          <input 
+          value={newNumber}
+         onChange={handleNumberChange} 
+         />
+        </div>
+        <div>
           <button type="submit">add</button>
         </div>
       </form>
@@ -48,7 +62,7 @@ const handleNameChange = (event) => {
       {persons.map(person => 
         (<div key={person.name}>
         <p>
-          {person.name}
+          {person.name} &nbsp; {person.number}
           </p>
           </div>)
       )}
