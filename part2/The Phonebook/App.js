@@ -13,8 +13,14 @@ const App = () => {
     const nameObject = {
       name: newName,
     };
+    persons.forEach((person) => {
+      if (newName === person.name) {
+        alert(`${newName} is already added to phonebook.`)
+        persons.pop();
+      };
     setPersons(persons.concat(nameObject));
     setNewName('');
+    })
   };
 
   console.log(persons);
