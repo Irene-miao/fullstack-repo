@@ -22,11 +22,12 @@ const App = () => {
       name: newName,
       number: newNumber,
     };
+
     persons.forEach((person) => {
       if (newName === person.name) {
         alert(`${newName} is already added to phonebook.`);
         persons.pop();
-      }
+      };
       setPersons(persons.concat(nameObject));
       setNewName("");
       setNewNumber("");
@@ -52,7 +53,7 @@ const App = () => {
   const personsToShow = showAll
     ? persons
     : persons.filter((person) =>
-        person.name.toLowerCase().includes(searchName)
+        person.name.toLowerCase().includes(searchName.toLowerCase())
       );
 
   return (
