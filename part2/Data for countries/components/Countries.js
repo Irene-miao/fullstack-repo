@@ -1,31 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
+import Country from "./Country";
 
 const Countries = (props) => {
   let { countries } = props;
   console.log(countries);
+  const [showAll, setShowAll] = useState(true);
 
   const showCountries = () => {
     if (countries.length === 1) {
       return countries.map((country) => (
-        <div key={country.name}>
-          <h1>{country.name}</h1>
-          <p>capital: {country.capital}</p>
-          <p>population: {country.population}</p>
-          <h3>languages</h3>
-          <ul>
-            {country.languages.map((item) => (
-              <div key={item.name}>
-                <li>{item.name}</li>
-              </div>
-            ))}
-          </ul>
-          <img src={country.flag} alt={country.name} width='300px'/>
-        </div>
-      ));
+      <Country country={country} />))
     } else if (countries.length < 10) {
       return countries.map((country) => (
         <div key={country.name}>
-          <p>{country.name}</p>
+          {country.name}
+          <button onClick={() => setShowAll(!showAll)}>show</button>
+          {showAll ? null : <Country country={country} />}
         </div>
       ));
     } else {
