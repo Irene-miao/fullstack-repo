@@ -25,21 +25,27 @@ const App = () => {
 
   console.log('render', persons.length, 'persons');
 
-  const addName = (event) => {
+  // Create new Person Object
+  const addPerson = (event) => {
     event.preventDefault();
-    const nameObject = {
+    const personObject = {
       name: newName,
       number: newNumber,
     };
+
+    axios
+    .post('http://localhost:3001/persons', personObject) // Object sent to server using axios post method
+    .then(response => {
+      setPersons(persons.concat(response.data)); //Save response sent from server to variable
+      setNewName("");
+      setNewNumber("");
+    });
 
     persons.forEach((person) => {
       if (newName === person.name) {
         alert(`${newName} is already added to phonebook.`);
         persons.pop();
       };
-      setPersons(persons.concat(nameObject));
-      setNewName("");
-      setNewNumber("");
     });
   };
 
@@ -74,7 +80,7 @@ const App = () => {
       <h3>Add a new person details</h3>
 
       <PersonForm
-        onSubmit={addName}
+        onSubmit={addPerson}
         value={newName}
         onChange={handleNameChange}
         valueNo={newNumber}
