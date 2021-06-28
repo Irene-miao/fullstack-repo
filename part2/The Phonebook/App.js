@@ -3,8 +3,7 @@ import React, { useState, useEffect } from "react";
 import PersonForm from "./components/PersonForm";
 import Filter from "./components/Filter";
 import Persons from "./components/Persons";
-import axios from 'axios';
-
+import backend from './services/backend';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -15,8 +14,8 @@ const App = () => {
 
   useEffect(() => {
     console.log('effect');
-    axios
-    .get('http://localhost:3001/persons')
+    backend
+    .getAll()
     .then(response => {
       console.log(response.data);
       setPersons(response.data);
@@ -33,8 +32,8 @@ const App = () => {
       number: newNumber,
     };
 
-    axios
-    .post('http://localhost:3001/persons', personObject) // Object sent to server using axios post method
+    backend
+    .create(personObject) // Object sent to server using axios post method
     .then(response => {
       setPersons(persons.concat(response.data)); //Save response sent from server to variable
       setNewName("");
