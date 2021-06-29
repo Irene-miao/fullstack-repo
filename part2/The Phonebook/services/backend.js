@@ -19,6 +19,10 @@ const backend = {
     remove: (id) => {
     return axios.delete(`${baseUrl}/${id}`)
     },
+
+    update: (id, newObject) => {
+        return axios.put(`${baseUrl}/${id}`, newObject)
+    },
 };
 
 

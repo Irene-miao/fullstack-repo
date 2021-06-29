@@ -42,8 +42,17 @@ const App = () => {
 
     persons.forEach((person) => {
       if (newName === person.name) {
-        alert(`${newName} is already added to phonebook.`);
+        alert(`${newName} is already added to phonebook, replace the old number with a new one?`);
         persons.pop();
+        const character = persons.find(p => p.id === person.id);
+        const changedPerson = {...character, number: newNumber};
+
+        backend
+        .update(person.id, changedPerson)
+        .then(response => {
+          console.log(response.data);
+          setPersons(persons.map(p => p.id !== person.id ? p : response.data))
+        });
       };
     });
   };
