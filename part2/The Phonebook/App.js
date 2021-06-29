@@ -64,6 +64,20 @@ const App = () => {
     setNewNumber(event.target.value);
   };
 
+  const handleDelete =(id) => {
+    console.log(`${id} to be deleted`);
+    backend
+    .remove(id)
+    .then(response => {
+      const result = window.confirm("Do you want to delete?");
+      if (result) {
+        window.open("exit.html", "Deleted successfully!")
+      };
+      console.log(`Delete success ${response.data}`);
+      setPersons(persons.filter(person => person.id !== id));
+    });
+  };
+
   const personsToShow = showAll
     ? persons
     : persons.filter((person) =>
@@ -87,8 +101,15 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-
-      <Persons personsToShow={personsToShow}/>
+<ul>
+{personsToShow.map((person) => 
+  <Persons 
+  key = {person.id}
+      person={person}
+      handleDelete={() => handleDelete(person.id)}
+      />
+)}
+</ul>
     </div>
   );
 };

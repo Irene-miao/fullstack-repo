@@ -1,17 +1,16 @@
 import React from 'react';
 
-const Persons = (props) => {
+
+const Persons = ({person, handleDelete}) => {
+
     return (
         <div>
-           {props.personsToShow.map(person => 
-        (<div key={person.name}>
-        <p>
+          <li>
           {person.name} &nbsp; {person.number}
-          </p>
+          &nbsp;
+          <button onClick={handleDelete}>delete</button>
+          </li>
           </div>)
-      )} 
-        </div>
-    )
 }
 
 export default Persons;
