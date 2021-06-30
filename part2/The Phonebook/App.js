@@ -44,29 +44,37 @@ const App = () => {
         }, 5000);
       });
 
-      persons.forEach((person) => {
-        if (newName === person.name) {
-          alert(
-            `${newName} is already added to phonebook, replace the old number with a new one?`
-          );
-          persons.pop();
-          const character = persons.find((p) => p.id === person.id); //Make a copy of the person object to modify
-          const changedPerson = { ...character, number: newNumber }; //New person object with amended property 
-  
-          // New person object sent with PUT request to backend server to replace old note
-          backend.update(person.id, changedPerson).then((response) => {
+    persons.forEach((person) => {
+      event.preventDefault();
+      if (newName === person.name) {
+        alert(
+          `${newName} is already added to phonebook, replace the old number with a new one?`
+        );
+        persons.pop();
+        const character = persons.find((p) => p.id === person.id); //Make a copy of the person object to modify
+        const changedPerson = { ...character, number: newNumber }; //New person object with amended property
+
+        // New person object sent with PUT request to backend server to replace old note
+        backend
+          .update(person.id, changedPerson)
+          .then((response) => {
             console.log(response.data);
-            setPersons(persons.map(p => p.id !== person.id ? p : response.data)); // Set persons state to new array contain old persons array + updated person
+            setPersons(
+              persons.map((p) => (p.id !== person.id ? p : response.data))
+            ); // Set persons state to new array contain old persons array + updated person
             persons.pop();
             setNewMessage(`Changed ${person.name} 's phone number`);
             setTimeout(() => {
               setNewMessage(null);
             }, 5000);
+          })
+          .catch((error) => {
+            alert(` ${person.name} was already deleted from server`);
+            setPersons(persons.filter((p) => p.id !== person.id));
           });
-        }
+      }
     });
-    };
-  
+  };
 
   const handleNameChange = (event) => {
     console.log(event.target.value);
@@ -120,15 +128,15 @@ const App = () => {
 
       <h2>Numbers</h2>
       <div>
-      <ul>
-        {personsToShow.map((person) => (
-          <Persons
-            key={person.id}
-            person={person}
-            handleDelete={() => handleDelete(person.id)}
-          />
-        ))}
-      </ul>
+        <ul>
+          {personsToShow.map((person) => (
+            <Persons
+              key={person.id}
+              person={person}
+              handleDelete={() => handleDelete(person.id)}
+            />
+          ))}
+        </ul>
       </div>
     </div>
   );
