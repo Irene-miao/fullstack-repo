@@ -78,6 +78,14 @@ return id
   })
   };
 
+  const name = persons.map(person => person.name);
+  console.log(name);
+  if (name.filter((item) => item === person.name)) {
+    return response.status(400).json({
+      error: 'name already exist'
+    })
+  };
+
   const personDetail = {
     name: person.name,
     number: person.number,
