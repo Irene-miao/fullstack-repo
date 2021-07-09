@@ -2,6 +2,10 @@ const { response } = require('express');
 const express = require('express');
 const app = express();
 app.use(express.json());
+const morgan = require('morgan');
+morgan.token('body', (req, res) => JSON.stringify(req.body));
+// Create morgan token for body
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms  :body '));
 
 let persons = [
     { 
@@ -80,22 +84,38 @@ return id
 
   const name = persons.map(person => person.name);
   console.log(name);
-  if (name.filter((item) => item === person.name)) {
+  if (name.map(item => item !== person.name)) {
+    const personDetail = {
+      name: person.name,
+      number: person.number,
+      date: new Date(),
+      id: generateId(100),
+    };
+    persons = persons.concat(personDetail);
+    response.json(personDetail);
+    
+  } else {
     return response.status(400).json({
       error: 'name already exist'
-    })
-  };
-
-  const personDetail = {
-    name: person.name,
-    number: person.number,
-    date: new Date(),
-    id: generateId(100),
-  };
-
-  persons = persons.concat(personDetail);
-  response.json(personDetail);
+  });
+};
 });
+
+// Middleware that print information about every request sent to server
+const requestLogger = (request, response, next) => {
+  console.log('Method:', request.method);
+  console.log('Path: ', request.path);
+  console.log('Body: ', request.body);
+  console.log('---');
+  next()   // next function yields control to next middleware
+};
+app.use(requestLogger);
+
+// Middleware that catch requests made to non-existing routes
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({error: 'unknown endpoint'})
+};
+app.use(unknownEndpoint);
 
 const PORT = 3001;
 app.listen(PORT);
