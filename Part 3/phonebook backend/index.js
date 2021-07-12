@@ -6,6 +6,9 @@ const morgan = require('morgan');
 morgan.token('body', (req, res) => JSON.stringify(req.body));
 // Create morgan token for body
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms  :body '));
+const cors = require('cors');
+app.use(cors());
+app.use(express.static('build'));
 
 let persons = [
     { 
@@ -84,11 +87,12 @@ return id
 
   const name = persons.map(person => person.name);
   console.log(name);
+  d = new Date();
   if (name.map(item => item !== person.name)) {
     const personDetail = {
       name: person.name,
       number: person.number,
-      date: new Date(),
+      date: d.toLocaleString(),
       id: generateId(100),
     };
     persons = persons.concat(personDetail);
@@ -117,6 +121,8 @@ const unknownEndpoint = (request, response) => {
 };
 app.use(unknownEndpoint);
 
-const PORT = 3001;
+//  Use the port defined in environment variable PORT or 
+// port 3001 if the environment variable PORT is undefined
+const PORT = process.env.PORT || 3001;
 app.listen(PORT);
 console.log(`Server running on port ${PORT}`);
