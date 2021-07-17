@@ -55,8 +55,11 @@ Phone.find({}).then(contact => {
 };*/
 
 // Get number of persons and request date
-app.get('/info', (request, response) => {
-   response.send(`<p>Phonebook has info for ${persons.length} people</p> <br> <p>${new Date()}</p>`);
+app.get('/info', (request, response, next) => {
+Phone.count({}).then(contact => {
+  response.json(`Phonebook has info for ${contact} people ${new Date()}`);
+})
+.catch(error => next(error))
 });
 
 // GET all persons
