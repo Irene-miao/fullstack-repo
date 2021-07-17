@@ -55,9 +55,9 @@ Phone.find({}).then(contact => {
 };*/
 
 // Get number of persons and request date
-/*app.get('/info', (request, response) => {
+app.get('/info', (request, response) => {
    response.send(`<p>Phonebook has info for ${persons.length} people</p> <br> <p>${new Date()}</p>`);
-});*/
+});
 
 // GET all persons
 app.get('/api/persons', (request, response) => {
@@ -68,17 +68,24 @@ app.get('/api/persons', (request, response) => {
 
 // Get one person id
 app.get('/api/persons/:id', (request, response) => {
- Phone.findById(request.params.id).then(phone => {
-   response.json(phone)
+ Phone.findById(request.params.id)
+ .then(phone => {
+   if (phone) {
+    response.json(phone)
+   } else {
+     response.status(404).end()
+   }
  })
+ .catch(error =>  next(error))
 });
 
 // Delete one person id
-app.delete('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id);
-  persons = persons.filter(p => p.id !== id);
-
-  response.status(204).end();
+app.delete('/api/persons/:id', (request, response, next) => {
+  Phone.findByIdAndRemove(request.params.id)
+  .then(result => {
+    response.status(204).end()
+  })
+  .catch(error => next(error))
 });
 
 // Post a new person
@@ -108,6 +115,22 @@ app.post('/api/persons', (request, response) => {
      console.log(savedPhone);
     response.json(savedPhone)
    })
+   .catch(error => next(error))
+});
+
+// Update a person number
+app.put('/api/persons/:id', (request, response, next) => {
+  const person = request.body;
+
+  const phone = {
+    number: person.number,
+  }
+
+  Phone.findByIdAndUpdate(request.params.id, phone, {new: true})
+  .then(updatedPhone => {
+    response.json(updatedPhone)
+  })
+  .catch(error => next(error))
 });
 
 // Middleware that catch requests made to non-existing routes
@@ -115,6 +138,18 @@ const unknownEndpoint = (request, response) => {
   response.status(404).send({error: 'unknown endpoint'})
 };
 app.use(unknownEndpoint);
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({error: 'malformatted id'})
+  }
+  next(error)
+};
+
+// // this has to be the last loaded middleware
+app.use(errorHandler);
 
 //  Use the port defined in environment variable PORT or 
 // port 3001 if the environment variable PORT is undefined
