@@ -1,0 +1,26 @@
+POST http://localhost:3003/api/blogs/
+content-type: application/json
+
+{
+    "title":"Wednesday",
+    "author":"Tri",
+    "url":"https://www.thespruceeats.com/baking-tips-and-tricks-4165823",
+    "likes": 4
+}
+
+###
+
+POST http://localhost:3003/api/blogs/
+content-type: application/json
+
+{
+    "title":"Friday",
+    "author":"Bri",
+    "url":"https://www.thespruceeats.com/baking-tips-and-tricks-4165823",
+    "likes": 5
+}
+
+###
+
+GET http://localhost:3003/api/blogs/
+
