@@ -1,5 +1,6 @@
 const listHelper = require("../utils/list_helper")
 
+
 const manyBlogs = [
   {
     _id: "5a422a851b54a676234d17f7",
@@ -94,5 +95,30 @@ describe('favoriteBlog', () => {
     const result = listHelper.favoriteBlog(manyBlogs)
     const mostLikes = manyBlogs[2]
     expect(result).toEqual(mostLikes)
+  })
+})
+
+describe('mostBlogs', () => {
+  test('author with most number of blogs', () => {
+    const result = listHelper.mostBlogs(manyBlogs)
+    const test = {
+      author: "Robert C. Martin",
+      blogs: 3
+    }
+const findMatch = result.filter(item => item.blogs >= 3)
+const match = Object.assign({}, ...findMatch)
+console.log(match)
+    expect(match).toEqual(test)
+  })
+})
+
+describe('mostLikes', () => {
+  test('blog with largest amount of total likes', () => {
+const result = listHelper.mostLikes(manyBlogs)
+const test = {
+  author: "Edsger W. Dijkstra",
+  likes: 17
+}
+expect(result).toEqual(test)
   })
 })
