@@ -32,7 +32,7 @@ return blog._id.toString()
 }
 
 const blogsInDb = async () => {
-    const blogs = await Note.find({})
+    const blogs = await Blog.find({})
     return blogs.map(blog => blog.toJSON())
 }
 

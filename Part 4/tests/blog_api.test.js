@@ -28,12 +28,37 @@ test('return correct number of blog posts as json', async () => {
  expect(response.body).toHaveLength(helper.initialBlogs.length)
 })
 
-test.only('unique identifier property of blog posts is named id', async () => {
+test('unique identifier property of blog posts is named id', async () => {
     const blogs = await api.get('/api/blogs')
     const firstBlog = blogs.body[0]
     console.log(firstBlog)
 
     expect(firstBlog.id).toBeDefined()
+})
+
+test.only('a valid blog can be created', async () => {
+const newBlog = {
+    title: 'Friday',
+    author: 'Cotton',
+    url: 'https://en.wikipedia.org/wiki/cotton',
+    likes: 2,
+}
+
+await api
+.post('/api/blogs')
+.send(newBlog)
+.expect(200)
+.expect('Content-Type', /application\/json/)
+
+const blogsAtEnd = await helper.blogsInDb()
+expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+console.log(blogsAtEnd)
+const latestBlog = blogsAtEnd.slice(-1)
+const blog = Object.assign({}, ...latestBlog)
+delete blog.id
+console.log(blog)
+expect(blog).toEqual(newBlog)
+
 })
 
 afterAll(() => {
