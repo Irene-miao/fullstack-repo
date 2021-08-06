@@ -62,7 +62,7 @@ describe("a blog post", () => {
     expect(blog).toEqual(newBlog);
   });
 
-  test.only("missing likes property value becomes 0", async () => {
+  test("missing likes property value becomes 0", async () => {
     const newBlog = {
       title: "Thursday",
       author: "Peanut",
@@ -82,6 +82,20 @@ describe("a blog post", () => {
     console.log(likes);
     expect(likes).toBe(0);
   });
+
+  test.only('return status code 400 for missing title and url properties', async () => {
+    const newBlog = {
+        url: "https://en.wikipedia.org/wiki/black_pepper",
+        likes: 2,
+      };
+
+await api
+.post('/api/blogs')
+.send(newBlog)
+.expect(400)
+
+  })
+
 });
 
 afterAll(() => {
