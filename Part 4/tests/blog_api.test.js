@@ -97,7 +97,7 @@ await api
 
   })
 
-  test.only('blog post can be deleted with valid id', async () => {
+  test('blog post can be deleted with valid id', async () => {
 const blogsAtStart = await helper.blogsInDb()
 const blogToDelete = blogsAtStart[0]
 
@@ -114,6 +114,29 @@ const title = blogsAtEnd.map(r => r.title)
 expect(title).not.toContain(blogToDelete.title)
 
   })
+
+  test.only('blog post can be updated with valid id', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+
+    const addBlog = {
+      url: 'https://en.wikipedia.org/wiki/garlic',
+      likes: 3
+    }
+
+    await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(addBlog)
+    .expect(200)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    console.log(blogsAtEnd)
+    const url = blogsAtEnd.map(r => r.url)
+    console.log(url)
+    expect(url).toContain(addBlog.url)
+  })
+
+  
 
 });
 
