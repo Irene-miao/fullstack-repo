@@ -5,6 +5,7 @@ const helper = require("./test_helper");
 const api = supertest(app);
 
 const Blog = require("../models/blog");
+const blog = require("../models/blog");
 
 beforeEach(async () => {
   await Blog.deleteMany({});
@@ -83,7 +84,7 @@ describe("a blog post", () => {
     expect(likes).toBe(0);
   });
 
-  test.only('return status code 400 for missing title and url properties', async () => {
+  test('return status code 400 for missing title and url properties', async () => {
     const newBlog = {
         url: "https://en.wikipedia.org/wiki/black_pepper",
         likes: 2,
@@ -93,6 +94,24 @@ await api
 .post('/api/blogs')
 .send(newBlog)
 .expect(400)
+
+  })
+
+  test.only('blog post can be deleted with valid id', async () => {
+const blogsAtStart = await helper.blogsInDb()
+const blogToDelete = blogsAtStart[0]
+
+await api
+.delete(`/api/blogs/${blogToDelete.id}`)
+.expect(204)
+
+const blogsAtEnd = await helper.blogsInDb()
+
+expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
+
+const title = blogsAtEnd.map(r => r.title)
+
+expect(title).not.toContain(blogToDelete.title)
 
   })
 
