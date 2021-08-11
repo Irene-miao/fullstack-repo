@@ -3,21 +3,23 @@ const supertest = require("supertest");
 const app = require("../app");
 const helper = require("./test_helper");
 const api = supertest(app);
-
+const bcrypt = require('bcrypt')
 const Blog = require("../models/blog");
-const blog = require("../models/blog");
+const User = require("../models/user");
 
-beforeEach(async () => {
-  await Blog.deleteMany({});
 
-  let blogObject = new Blog(helper.initialBlogs[0]);
-  await blogObject.save();
-
-  blogObject = new Blog(helper.initialBlogs[1]);
-  await blogObject.save();
-});
 
 describe("blog posts", () => {
+  beforeEach(async () => {
+    await Blog.deleteMany({});
+  
+    let blogObject = new Blog(helper.initialBlogs[0]);
+    await blogObject.save();
+  
+    blogObject = new Blog(helper.initialBlogs[1]);
+    await blogObject.save();
+  });
+
   test("return correct number of blog posts as json", async () => {
     await api
       .get("/api/blogs")
@@ -39,6 +41,16 @@ describe("blog posts", () => {
 });
 
 describe("a blog post", () => {
+  beforeEach(async () => {
+    await Blog.deleteMany({});
+  
+    let blogObject = new Blog(helper.initialBlogs[0]);
+    await blogObject.save();
+  
+    blogObject = new Blog(helper.initialBlogs[1]);
+    await blogObject.save();
+  });
+
   test("a valid blog post can be created", async () => {
     const newBlog = {
       title: "Friday",
@@ -115,7 +127,7 @@ expect(title).not.toContain(blogToDelete.title)
 
   })
 
-  test.only('blog post can be updated with valid id', async () => {
+  test('blog post can be updated with valid id', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToUpdate = blogsAtStart[0]
 
@@ -136,7 +148,59 @@ expect(title).not.toContain(blogToDelete.title)
     expect(url).toContain(addBlog.url)
   })
 
-  
+  describe('when there is initially one user in database' , () => {
+    beforeEach(async () => {
+      await User.deleteMany({})
+
+      const passwordHash = await bcrypt.hash('secret', 10)
+      const user = new User({ username: 'root', passwordHash })
+
+      await user.save()
+    })
+
+    test('create user success with fresh username', async () => {
+      const usersAtStart = await helper.usersInDb()
+
+      const newUser = {
+        username: 'newUser',
+        name: 'New User',
+        password: 'itzsecret',
+      }
+
+      await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+      const usersAtEnd = await helper.usersInDb()
+      expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
+
+      const usernames = usersAtEnd.map(u => u.username)
+      expect(usernames).toContain(newUser.username)
+    })
+
+    test.only('create user fail with proper statuscode and message if username is taken', async () => {
+      const usersAtStart = await helper.usersInDb()
+
+      const newUser = {
+        username: 'root',
+        name: 'Duplicate',
+        password: 'itzsecret',
+      }
+
+      const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+      expect(result.body.error).toContain('`username` to be unique')
+
+      const usersAtEnd = await helper.usersInDb()
+      expect(usersAtEnd).toHaveLength(usersAtStart.length)
+    })
+  })
 
 });
 
