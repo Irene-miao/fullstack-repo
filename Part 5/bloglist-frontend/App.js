@@ -3,10 +3,11 @@ import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import BlogForm from "./components/BlogForm";
+import Notification from './components/Notification';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [notification, setNotification] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
@@ -28,6 +29,13 @@ const App = () => {
     }
   }, [])
 
+  const notifyWith = (message, type='success') => {
+    setNotification({message, type})
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault();
 
@@ -42,8 +50,9 @@ const App = () => {
       console.log(user)
       setUsername("");
       setPassword("");
-    } catch (e) {
-      setErrorMessage(e);
+    } catch (error) {
+      console.log(error.response.data.error)
+      notifyWith(`${error.response.data.error}`, 'error');
     }
   };
 
@@ -79,19 +88,21 @@ const App = () => {
   const addBlog = async (event) => {
 event.preventDefault()
 try {
-  const blog = await blogService.create({
+   const blog = await blogService.create({
     title,
     author,
     url,
     likes,
   });
   blogService.setToken(user.token)
+  notifyWith(`a new blog ${blog.title} by ${blog.author} added`)
   setTitle("");
   setAuthor("");
   setUrl("");
   setLikes("");
-} catch (e) {
-  setErrorMessage(e);
+} catch (error) {
+  console.log(error.response.data.error)
+  notifyWith(`${error.response.data.error} `, 'error');
 }
 
   }
@@ -99,13 +110,15 @@ try {
   return (
     <div>
       <h1>blogs</h1>
-      <div>{errorMessage}</div>
+      <div>
+        <Notification notification={notification} />
+      </div>
 
 { user === null ?
 loginForm() : 
 <div>
   <p>{user.name} logged in</p> 
-  <button onClick={() => removeUser()}>Logout</button>
+  <button onClick={() => removeUser()}>logout</button>
   <BlogForm
   onSubmit={addBlog}
   value={title}
@@ -117,6 +130,7 @@ loginForm() :
   valueL={likes}
   onChangeL={({ target }) => setLikes(target.value)}
   />
+  <br></br>
   <div>
 {blogs.map((blog) => (
   <Blog key={blog.id} blog={blog} />

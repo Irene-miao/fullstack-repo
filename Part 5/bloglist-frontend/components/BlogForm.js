@@ -5,27 +5,39 @@ const BlogForm = (props) => {
         <div>
             <h3>Create New Blog</h3>
             <form onSubmit={props.onSubmit} >
-title:
+                <div>
+                title:
 <input
 value={props.value}
 onChange={props.onChange}
 />
+                </div>
+<div>
 author:
 <input
 value={props.valueA}
 onChange={props.onChangeA}
 />
+</div>
+<div>
 url:
 <input
 value={props.valueU}
 onChange={props.onChangeU}
 />
+</div>
+<div>
 likes:
 <input
 value={props.valueL}
 onChange={props.onChangeL}
 />
-<button type='submit'>add</button>
+</div>
+<br></br>
+<div>
+<button type='submit'>create</button>
+</div>
+
             </form>
         </div>
     )
