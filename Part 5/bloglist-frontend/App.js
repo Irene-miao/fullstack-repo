@@ -4,6 +4,8 @@ import blogService from "./services/blogs";
 import loginService from "./services/login";
 import BlogForm from "./components/BlogForm";
 import Notification from './components/Notification';
+import LoginForm from "./components/LoginForm";
+import Togglable from "./components/Togglable";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -57,28 +59,15 @@ const App = () => {
   };
 
   const loginForm = () => (
-    <div>
-      <h3>Log in to application</h3>
-<form onSubmit={handleLogin}>
-      <div>
-        username
-        <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-        password
-        <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">login</button>
-    </form>
-    </div>
+  <Togglable buttonLabel='login'>
+    <LoginForm
+    username={username}
+    password={password}
+    handleUsernameChange={({target}) => setUsername(target.value)}
+    handlePasswordChange={({target}) => setPassword(target.value)}
+    handleSubmit={handleLogin}
+    />
+  </Togglable>
   );
 
   const removeUser = () => {
@@ -119,17 +108,20 @@ loginForm() :
 <div>
   <p>{user.name} logged in</p> 
   <button onClick={() => removeUser()}>logout</button>
-  <BlogForm
+ <Togglable buttonLabel='create new blog'>
+ <BlogForm
   onSubmit={addBlog}
-  value={title}
-  onChange={({ target }) => setTitle(target.value)}
-  valueA={author}
-  onChangeA={({ target }) => setAuthor(target.value)}
-  valueU={url}
-  onChangeU={({ target }) => setUrl(target.value)}
-  valueL={likes}
-  onChangeL={({ target }) => setLikes(target.value)}
+  title={title}
+ changeTitle={({ target }) => setTitle(target.value)}
+  author={author}
+  changeAuthor={({ target }) => setAuthor(target.value)}
+  url={url}
+  changeUrl={({ target }) => setUrl(target.value)}
+  likes={likes}
+  changeLikes={({ target }) => setLikes(target.value)}
   />
+ </Togglable>
+ 
   <br></br>
   <div>
 {blogs.map((blog) => (
