@@ -13,10 +13,7 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-  const [likes, setLikes] = useState('')
+ 
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -74,27 +71,20 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogappUser')
   }
 
-  const addBlog = async (event) => {
-event.preventDefault()
+  const addBlog = (blogObject) => {
+console.log(blogObject)
 try {
-   const blog = await blogService.create({
-    title,
-    author,
-    url,
-    likes,
-  });
+  blogService
+  .create(blogObject)
   blogService.setToken(user.token)
-  notifyWith(`a new blog ${blog.title} by ${blog.author} added`)
-  setTitle("");
-  setAuthor("");
-  setUrl("");
-  setLikes("");
+  .then(returnedBlog => {
+  setBlogs(blogs.concat(returnedBlog))
+  notifyWith(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)})
 } catch (error) {
   console.log(error.response.data.error)
   notifyWith(`${error.response.data.error} `, 'error');
-}
+}}
 
-  }
 
   return (
     <div>
@@ -110,15 +100,7 @@ loginForm() :
   <button onClick={() => removeUser()}>logout</button>
  <Togglable buttonLabel='create new blog'>
  <BlogForm
-  onSubmit={addBlog}
-  title={title}
- changeTitle={({ target }) => setTitle(target.value)}
-  author={author}
-  changeAuthor={({ target }) => setAuthor(target.value)}
-  url={url}
-  changeUrl={({ target }) => setUrl(target.value)}
-  likes={likes}
-  changeLikes={({ target }) => setLikes(target.value)}
+  createBlog={addBlog}
   />
  </Togglable>
  
