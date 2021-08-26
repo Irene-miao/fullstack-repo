@@ -105,6 +105,10 @@ const App = () => {
     }
   };
 
+  const blogsSort = blogs.sort((first, second) => second.likes - first.likes)
+  
+  console.log(blogsSort)
+
   const blogFormRef = useRef();
 
   return (
@@ -126,7 +130,7 @@ const App = () => {
 
           <br></br>
           <div>
-            {blogs.map((blog) => (
+            {blogsSort.map((blog) => (
               <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
             ))}
           </div>
