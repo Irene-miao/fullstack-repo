@@ -6,7 +6,7 @@ const blogStyle = {
   borderWidth: 1,
 };
 
-const Blog = ({ blog, updateBlog, deleteBlog }) => {
+const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
   console.log(blog);
   const [show, setShow] = useState(false);
 
@@ -54,7 +54,8 @@ deleteBlog({
         </p>
         <p>{blog.user[0].username}</p>
       </div>
-      <button onClick={handleDelete}>delete</button>
+      { blog.user[0].username === user.username ? <button onClick={handleDelete}>delete</button> : null }
+      
     </div>
   );
 };
