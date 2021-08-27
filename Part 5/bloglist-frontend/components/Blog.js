@@ -6,7 +6,7 @@ const blogStyle = {
   borderWidth: 1,
 };
 
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog, updateBlog, deleteBlog }) => {
   console.log(blog);
   const [show, setShow] = useState(false);
 
@@ -27,8 +27,16 @@ const Blog = ({ blog, updateBlog }) => {
       title: blog.title,
       url: blog.url,
     });
-  
-  };
+    };
+
+    const handleDelete = (event) => {
+event.preventDefault()
+deleteBlog({
+  id: blog.id,
+  title: blog.title,
+  author: blog.author,
+})
+    }
 
   return (
     <div style={blogStyle}>
@@ -46,6 +54,7 @@ const Blog = ({ blog, updateBlog }) => {
         </p>
         <p>{blog.user[0].username}</p>
       </div>
+      <button onClick={handleDelete}>delete</button>
     </div>
   );
 };

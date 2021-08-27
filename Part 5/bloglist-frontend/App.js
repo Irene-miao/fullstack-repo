@@ -73,8 +73,8 @@ const App = () => {
   const addBlog = async (blogObject) => {
     blogFormRef.current.toggleVisibility();
     try {
-     await  blogService.create(blogObject);
-      blogService.setToken(user.token).then(returnedBlog => {
+      await blogService.create(blogObject);
+      blogService.setToken(user.token).then((returnedBlog) => {
         setBlogs(blogs.concat(returnedBlog));
         notifyWith(
           `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
@@ -86,28 +86,48 @@ const App = () => {
     }
   };
 
-  const updateBlog = (blogObject) => {
+  const updateBlog = async (blogObject) => {
     console.log(blogObject.id);
     try {
-      blogService
-      .update(blogObject.id, {
+      const updatedBlog = await blogService.update(blogObject.id, {
         user: blogObject.user,
         likes: blogObject.likes,
         author: blogObject.author,
         title: blogObject.title,
         url: blogObject.url,
       });
-      blogService
-      .setToken(user.token)
+      blogService.setToken(user.token);
+      setBlogs(blogs.concat(updatedBlog));
     } catch (error) {
       console.log(error);
       notifyWith(`${error.response.data.error} `, "error");
     }
   };
 
-  const blogsSort = blogs.sort((first, second) => second.likes - first.likes)
+  const deleteBlog =  async (blogObject) => {
+    console.log(blogObject);
+
+    try {
+      await blogService
+      .remove(blogObject.id)
+      blogService.setToken(user.token)
+
+        const ok = window.confirm(`Remove blog ${blogObject.title} by ${blogObject.author} `)
+        if (ok) {
+        notifyWith(`Deleted blog ${blogObject.title} by ${blogObject.author}`)
+          setBlogs(blogs.filter((blog) => blog.id !== blogObject.id));
+        } 
+      } catch (error) {
+        console.log(error);
+        notifyWith(`${error.response.data.error} `, "error");
+      }
+    }
   
-  console.log(blogsSort)
+     
+    
+  const blogsSort = blogs.sort((first, second) => second.likes - first.likes);
+
+  console.log(blogsSort);
 
   const blogFormRef = useRef();
 
@@ -131,7 +151,12 @@ const App = () => {
           <br></br>
           <div>
             {blogsSort.map((blog) => (
-              <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+              <Blog
+                key={blog.id}
+                blog={blog}
+                updateBlog={updateBlog}
+                deleteBlog={deleteBlog}
+              />
             ))}
           </div>
         </div>
