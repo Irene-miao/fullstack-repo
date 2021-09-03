@@ -57,9 +57,16 @@ describe('<Blog />', () => {
     expect(revealedContent).toHaveTextContent('2')
     expect(likes).toHaveTextContent(blog.likes)
     expect(component.container).toHaveTextContent(blog.url)
-
   })
 
+  test('like button clicked twice calls event handler passsed as a prop twice', () => {
+    const button = component.getByText('like')
+
+    userEvent.click(button)
+    userEvent.click(button)
+
+    expect(mockHandleUpdate.mock.calls).toHaveLength(2)
+  })
 
 })
 
