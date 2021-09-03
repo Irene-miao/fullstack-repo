@@ -43,6 +43,23 @@ describe('<Blog />', () => {
     expect(defaultHiddenContent).toHaveStyle('display:none')
   })
 
+  test('renders blog url and likes when button view is clicked', () => {
+    const button = component.getByText('view')
+
+    userEvent.click(button)
+
+    const revealedContent = component.getByTestId('hidden')
+    const likes = component.container.querySelector('.likes')
+
+    expect(revealedContent).not.toHaveStyle('display:none')
+    expect(revealedContent).not.toHaveClass('blog')
+    expect(revealedContent).toBeVisible()
+    expect(revealedContent).toHaveTextContent('2')
+    expect(likes).toHaveTextContent(blog.likes)
+    expect(component.container).toHaveTextContent(blog.url)
+
+  })
+
 
 })
 
