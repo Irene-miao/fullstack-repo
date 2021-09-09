@@ -42,4 +42,21 @@ describe('Blog app', function() {
 
         })
     })
+
+    describe('When logged in', function() {
+        beforeEach(function() {
+            cy.login({ username: 'testone', password: 'testing'})
+        })
+
+        it.only('A blog can be created', function() {
+            cy.contains('create new blog').click()
+            cy.get('#title').type('Monday')
+            cy.get('#author').type('Tester 1')
+            cy.get('#url').type('www.testing.com')
+            cy.get('#likes').type('3')
+            cy.get('#create-button').click()
+
+            cy.get('html').should('contain', 'Monday Tester 1')
+        })
+    })
 })
