@@ -48,7 +48,7 @@ describe('Blog app', function() {
             cy.login({ username: 'testone', password: 'testing'})
         })
 
-        it.only('A blog can be created', function() {
+        it('A blog can be created', function() {
             cy.contains('create new blog').click()
             cy.get('#title').type('Monday')
             cy.get('#author').type('Tester 1')
@@ -57,6 +57,19 @@ describe('Blog app', function() {
             cy.get('#create-button').click()
 
             cy.get('html').should('contain', 'Monday Tester 1')
+        })
+
+        it.only('user can like a blog', function() {
+            cy.contains('create new blog').click()
+            cy.get('#title').type('Tuesday')
+            cy.get('#author').type('Tester 2')
+            cy.get('#url').type('www.testingtwo.com')
+            cy.get('#likes').type('2')
+            cy.get('#create-button').click()
+            cy.get('#view').click()
+            cy.get('#like').click()
+
+            cy.get('.likes').contains('3')
         })
     })
 })
