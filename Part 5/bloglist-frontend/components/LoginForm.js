@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 
 const LoginForm = ({
   handleSubmit,
@@ -13,19 +13,23 @@ const LoginForm = ({
 
       <form onSubmit={handleSubmit}>
         <div>
-          username
-          <input value={username} onChange={handleUsernameChange} />
+          <div>username
+            <input id='username' value={username} onChange={handleUsernameChange} />
+          </div>
+          <div>
           password
-          <input
-            type="password"
-            value={password}
-            onChange={handlePasswordChange}
-          />
+            <input
+              id='password'
+              type="password"
+              value={password}
+              onChange={handlePasswordChange}
+            />
+          </div>
         </div>
-        <button type="submit">login</button>
+        <button id='login-button' type="submit">Submit</button>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default LoginForm;
+export default LoginForm
