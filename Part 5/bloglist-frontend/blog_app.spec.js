@@ -13,6 +13,12 @@ describe('Blog app', function() {
             password: 'testing'
         }
         cy.request('POST', 'http://localhost:3003/api/users/', user)
+        const userTwo = {
+            name: 'Test Two',
+            username: 'testtwo',
+            password: 'testing2'
+        }
+        cy.request('POST', 'http://localhost:3003/api/users/', userTwo)
         cy.visit('http://localhost:3000')
     })
 
@@ -29,6 +35,8 @@ describe('Blog app', function() {
             cy.get('#password').type('testing')
             cy.contains('Submit').click()
             cy.contains('logout').click()
+
+            cy.contains('Test One logged in')
         })
 
         it('fails with wrong credentials', function() {
@@ -59,17 +67,67 @@ describe('Blog app', function() {
             cy.get('html').should('contain', 'Monday Tester 1')
         })
 
-        it.only('user can like a blog', function() {
-            cy.contains('create new blog').click()
-            cy.get('#title').type('Tuesday')
-            cy.get('#author').type('Tester 2')
-            cy.get('#url').type('www.testingtwo.com')
-            cy.get('#likes').type('2')
-            cy.get('#create-button').click()
-            cy.get('#view').click()
-            cy.get('#like').click()
+        describe('a blog exists', function() {
+            beforeEach(function() {
+                cy.createBlog({
+                    title: 'Tuesday',
+                    author: 'Tester 2',
+                    url: 'www.testingtwo.com',
+                    likes: '2'
+                    })
+                })
 
-            cy.get('.likes').contains('3')
+            it('user can like a blog', function() {
+                cy.get('#view').click()
+                cy.get('#like').click()
+    
+                cy.get('.likes').contains('3')
+            })
+
+            it('delete blog', function() {
+                cy.get('#view').click()
+                cy.get('#delete').click()
+    
+                cy.contains('view').should('not.exist')
+            })
+        })
+        
+
+        describe('many blogs exist', function() {
+            beforeEach(function() {
+                cy.createBlog({
+                    title: 'Wednesday',
+                    author: 'Tester 3',
+                    url: 'www.testingthree.com',
+                    likes: '3'
+                })
+                cy.createBlog({
+                    title: 'Thursday',
+                    author: 'Tester 4',
+                    url: 'www.testingfour.com',
+                    likes: '4'
+                })
+                cy.createBlog({
+                    title: 'Friday',
+                    author: 'Tester 5',
+                    url: 'www.testingfive.com',
+                    likes: '5'
+                })
+            })
+
+            it('other user cannot delete blog', function() {
+                cy.get('#logout').click()
+                cy.login({ username: 'testtwo', password: 'testing2'})
+                cy.get('#view').click()
+
+                cy.contains('delete').should('not.exist')
+            })
+
+            
+            
+           
+            
+
         })
     })
 })
