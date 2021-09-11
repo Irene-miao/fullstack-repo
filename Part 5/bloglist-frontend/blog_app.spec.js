@@ -92,7 +92,6 @@ describe('Blog app', function() {
             })
         })
         
-
         describe('many blogs exist', function() {
             beforeEach(function() {
                 cy.createBlog({
@@ -115,19 +114,33 @@ describe('Blog app', function() {
                 })
             })
 
-            it('other user cannot delete blog', function() {
-                cy.get('#logout').click()
-                cy.login({ username: 'testtwo', password: 'testing2'})
-                cy.get('#view').click()
-
-                cy.contains('delete').should('not.exist')
+            it.only('blogs with likes in descending order', function() {
+                cy.get('html').first().as('firstBlog')
+                cy.get('@firstBlog').find('.likes').should('contain', '5')
+                cy.get('html').last().as('thirdBlog')
+                cy.get('@thirdBlog').find('.likes').should('contain', '3')
             })
 
-            
-            
-           
-            
+        
 
         })
     })
+
+    describe('another user logged in', function() {
+        beforeEach(function() {
+            cy.createBlog({
+                title: 'Wednesday',
+                author: 'Tester 3',
+                url: 'www.testingthree.com',
+                likes: '3'
+            })
+        })
+
+        it('other user cannot delete blog', function() {
+            cy.login({ username: 'testtwo', password: 'testing2'})
+            cy.get('#view').click()
+
+            cy.contains('delete').should('not.exist')
+        })   
+        })   
 })
