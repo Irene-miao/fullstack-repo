@@ -21,11 +21,12 @@ dispatch(createAnecdote(content))
     dispatch(voteOf(id))
   }
 
- console.log(anecdotes)
+ const anecdoteSort = anecdotes.sort((first, second) => second.data.votes - first.data.votes)
+
   return (
     <div>
       <h2>Anecdotes</h2>
-      {anecdotes.map(anecdote =>
+      {anecdoteSort.map(anecdote =>
         <div key={anecdote.data?.id}>
           <div>
             {anecdote.data?.content}
