@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
 const Notification = () => {
@@ -8,6 +8,13 @@ const Notification = () => {
     padding: 10,
     borderWidth: 1
   }
+
+  useEffect((notification) => {
+  setTimeout(() => {
+    notification = ''
+  }, 5000) 
+})
+
   return (
     <div style={style}>
       {notification}
