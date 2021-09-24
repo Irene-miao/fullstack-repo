@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 const AnecdoteList = () => {
     const anecdotes = useSelector(state => {
       if ( state.filter === '') {
+        console.log(state.anecdotes)
         return state.anecdotes
       } else {
         console.log(state.filter)
@@ -24,20 +25,20 @@ const AnecdoteList = () => {
         dispatch(notify(data?.content))
       };
 
-    /*const anecdoteSort = anecdotes.sort(
+    const anecdoteSort = anecdotes.sort(
         (first, second) => second.data?.votes - first.data?.votes
-      );*/
+      );
 
     return (
         <div>
-      {anecdotes.map(anecdote =>
+      {anecdoteSort.map(anecdote =>
         <div key={anecdote.data?.id}>
           <div>
             {anecdote.data?.content}
           </div>
           <div>
             has {anecdote.data?.votes}
-            <button onClick={() => vote(anecdote?.data)}>vote</button>
+            <button onClick={() => vote(anecdote.data)}>vote</button>
           </div> 
         </div>
     )}
