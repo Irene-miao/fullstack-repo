@@ -1,8 +1,8 @@
 import React from 'react'
 import { createAnecdote } from "../reducers/anecdoteReducer";
-import { notifyWith } from "../reducers/notificationReducer"
+import { notify } from "../reducers/notificationReducer"
 import { useDispatch } from "react-redux";
-import anecdoteService from '../services/anecdotes'
+
 
 
 const AnecdoteForm = () => {
@@ -14,7 +14,7 @@ const AnecdoteForm = () => {
         console.log(content);
         event.target.anecdote.value = "";
         dispatch(createAnecdote(content));
-        dispatch(notifyWith(content))
+        dispatch(notify(`new anecdote '${content}'`, 5000))
       };
 
     return (

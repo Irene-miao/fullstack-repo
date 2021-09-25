@@ -1,38 +1,32 @@
-
-
 const reducer = (state = '', action) => {
-    
-    console.log("state now: ", state);
-    console.log("action", action);
-    switch (action.type) {
-        case "NOTIFY": {
-            const content = action.data.content
-            const message =  `you voted '${content}'`
-            return [...state, message]
-        }
-        case "NOTIFYWITH": {
-            const content = action.data.content;
-            const message = `you create a anecdote '${content}'`
-            return [...state, message]
-        }
-        default:
-            return state = '';
+  console.log("state now: ", state);
+  console.log("action", action);
+  switch (action.type) {
+    case "NOTIFY": {
+      const content = action.data.content;
+      const time = action.data.time;
+      if ( state === '') {
+        return [...state, content]
+      } 
+      return setTimeout(() => {
+          state = ''
+        }, time)
     }
-        
+    default:
+      return state = ''
+  }
+};
+
+export const notify = (content, time) => {
+  return async (dispatch) => {
+    
+
+    dispatch({
+      type: "NOTIFY",
+      data: { content, time },
+})
+  }
 }
 
-export const notify = (content) => {
-    return {
-      type: 'NOTIFY',
-      data: { content }
-    }
-  }
-
-  export const notifyWith = (content) => {
-    return {
-      type: 'NOTIFYWITH',
-      data: { content }
-    }
-  }
 
 export default reducer;

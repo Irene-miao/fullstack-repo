@@ -21,8 +21,8 @@ const AnecdoteList = () => {
     
     const vote = (data) => {
         console.log("vote", data?.id);
-        dispatch(voteOf(data?.id));
-        dispatch(notify(data?.content))
+        dispatch(voteOf(data));
+        dispatch(notify(`you voted '${data?.content}'`, 5000))
       };
 
     const anecdoteSort = anecdotes.sort(

@@ -9,11 +9,7 @@ const Notification = () => {
     borderWidth: 1
   }
 
-  useEffect((notification) => {
-  setTimeout(() => {
-    notification = ''
-  }, 5000) 
-})
+
 
   return (
     <div style={style}>
