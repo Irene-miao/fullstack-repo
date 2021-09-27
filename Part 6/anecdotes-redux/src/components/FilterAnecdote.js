@@ -1,15 +1,14 @@
 import React from 'react'
-import { useDispatch } from "react-redux";
+import { connect } from "react-redux";
 import { filter } from '../reducers/filterReducer'
 
-const FilterAnecdote = () => {
-    const dispatch = useDispatch();
+const FilterAnecdote = (props) => {
 
     const handleChange = (event) => {
 event.preventDefault()
 const value = event.target.value
 console.log(value)
-dispatch(filter(value))
+props.filter(value)
     }
 
     const style = {
@@ -23,4 +22,9 @@ dispatch(filter(value))
     )
 }
 
-export default FilterAnecdote
+
+
+export default connect(
+    null,
+    { filter }
+)(FilterAnecdote)
