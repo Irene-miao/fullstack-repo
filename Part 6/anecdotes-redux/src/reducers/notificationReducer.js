@@ -5,12 +5,14 @@ const reducer = (state = '', action) => {
     case "NOTIFY": {
       const content = action.data.content;
       const time = action.data.time;
-      if ( state === '') {
-        return [...state, content]
-      } 
-      return setTimeout(() => {
-          state = ''
-        }, time)
+     if (!state) {
+      clearTimeout(action.data.timer)
+      return [...state, content]
+     }
+     return action.data 
+    
+      
+      
     }
     default:
       return state = ''
@@ -19,11 +21,13 @@ const reducer = (state = '', action) => {
 
 export const notify = (content, time) => {
   return async (dispatch) => {
-    
-
     dispatch({
       type: "NOTIFY",
-      data: { content, time },
+      data: { 
+        content, 
+        timer: setTimeout((state) => {
+          state = ''
+        }, time )},
 })
   }
 }
