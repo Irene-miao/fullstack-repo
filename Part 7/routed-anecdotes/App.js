@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Link,
-  useParams
+  useParams,
+  useHistory,
 } from "react-router-dom";
 
 const Menu = () => {
@@ -32,8 +33,8 @@ const AnecdoteList = ({ anecdotes }) => (
     <h2>Anecdotes</h2>
     <ul>
       {anecdotes.map((anecdote) => (
-        <li key={anecdote.id}>
-          <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+        <li key={anecdote?.id}>
+          <Link to={`/anecdotes/${anecdote?.id}`}>{anecdote?.content}</Link>
         </li>
       ))}
     </ul>
@@ -47,10 +48,10 @@ const Anecdote = ({ anecdotes }) => {
 console.log(anecdote)
   return (
     <div>
-      <h2>{anecdote.content}</h2>
-      <div>has {anecdote.votes} votes</div>
+      <h2>{anecdote?.content}</h2>
+      <div>has {anecdote?.votes} votes</div>
       <br />
-      <div>for more info see <a href={`${anecdote.info}`}>{anecdote.info}</a></div>
+      <div>for more info see <a href={`${anecdote?.info}`}>{anecdote?.info}</a></div>
       <br />
     </div>
     
@@ -79,6 +80,23 @@ const About = () => (
   </div>
 );
 
+const Notification = ({notification}) => {
+
+  useEffect(() => {
+  setTimeout(() => {
+    notification = null
+  }, 10000)
+}, [])
+
+
+return (
+  <div>
+    <h4>{notification}</h4>
+  </div>
+)
+}
+
+
 const Footer = () => (
   <div>
     Anecdote app for
@@ -97,6 +115,7 @@ const CreateNew = (props) => {
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("");
   const [info, setInfo] = useState("");
+  const history = useHistory()
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -105,7 +124,8 @@ const CreateNew = (props) => {
       author,
       info,
       votes: 0,
-    });
+    })
+    history.push('/')
   };
 
   return (
@@ -165,6 +185,7 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0);
     setAnecdotes(anecdotes.concat(anecdote));
+    setNotification(`a new anecdote ${anecdote.content} created!`)
   };
 
   const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
@@ -185,6 +206,7 @@ const App = () => {
       <Router>
         <h1>Software anecdotes</h1>
         <Menu />
+        <Notification notification={notification}/>
         <Switch>
           <Route path="/anecdotes/:id">
             <Anecdote anecdotes={anecdotes} />
