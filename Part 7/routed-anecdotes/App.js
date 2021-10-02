@@ -7,6 +7,7 @@ import {
   useParams,
   useHistory,
 } from "react-router-dom";
+import {useField} from './hooks'
 
 const Menu = () => {
   const padding = {
@@ -111,12 +112,14 @@ const Footer = () => (
   </div>
 );
 
-const CreateNew = (props) => {
-  const [content, setContent] = useState("");
-  const [author, setAuthor] = useState("");
-  const [info, setInfo] = useState("");
-  const history = useHistory()
 
+
+const CreateNew = (props) => {
+  const content = useField("content");
+  const author = useField("author");
+  const info = useField("info");
+  const history = useHistory()
+console.log(content)
   const handleSubmit = (e) => {
     e.preventDefault();
     props.addNew({
@@ -135,25 +138,19 @@ const CreateNew = (props) => {
         <div>
           content
           <input
-            name="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
+          {...content}
           />
         </div>
         <div>
           author
           <input
-            name="author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
+          {...author}
           />
         </div>
         <div>
           url for more info
           <input
-            name="info"
-            value={info}
-            onChange={(e) => setInfo(e.target.value)}
+          {...info}
           />
         </div>
         <button>create</button>
@@ -183,9 +180,17 @@ const App = () => {
   const [notification, setNotification] = useState("");
 
   const addNew = (anecdote) => {
-    anecdote.id = (Math.random() * 10000).toFixed(0);
-    setAnecdotes(anecdotes.concat(anecdote));
-    setNotification(`a new anecdote ${anecdote.content} created!`)
+    console.log(anecdote)
+    const changedAnecdote = {
+        content: anecdote.content?.value,
+        author: anecdote.author?.value,
+        info: anecdote.info?.value,
+        votes: 0
+    }
+    changedAnecdote.id = (Math.random() * 10000).toFixed(0);
+    setAnecdotes(anecdotes.concat(changedAnecdote));
+    console.log(changedAnecdote)
+    setNotification(`a new anecdote ${changedAnecdote.content} created!`)
   };
 
   const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
@@ -200,7 +205,7 @@ const App = () => {
 
     setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)));
   };
-
+console.log(anecdotes)
   return (
     <div>
       <Router>
