@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+  
+import React, { useState, useEffect  } from 'react'
 import axios from 'axios'
 
 
@@ -16,62 +17,71 @@ const useField = (type) => {
   }
 }
 
-const useCountry = (name) => {
-  const [country, setCountry] = useState(null)
+const useResource = (baseUrl) => {
+  const [resources, setResources] = useState([])
 
-  useEffect(() => {
-    axios
-    .get('https://restcountries.com/v3.1/all')
-    .then(response => {
-      console.log(response.data)
-      const countries = response.data
-      console.log(countries)
-      countries.map(country => country.name?.common.toLowerCase() === name.toLowerCase() ? setCountry(country) : null)
-  })
-}, [country])
-console.log(country)
-  return country
-}
 
-const Country = ({ country }) => {
- 
-
-  if (!country) {
-    return (
-      <div>
-        not found...
-      </div>
-    )
+  const getAll = async () => {
+    const response = await axios.get(baseUrl)
+    setResources(response.data)
+    console.log(response.data)
   }
 
-  return (
-    <div>
-      <h3>{country.name?.common} </h3>
-      <div>capital {country.capital} </div>
-      <div>population {country.population}</div> 
-      <img src={country.flags?.svg} height='100' alt={`flag of ${country.name}`}/>  
-    </div>
-  )
+  const create = async (resource) => {
+    const response = await axios.post(baseUrl, resource)
+    setResources(resources.concat(response.data))
+    console.log(response.data)
+  }
+
+  const service = {
+     create, getAll
+  }
+
+  return [
+    resources, service
+  ]
 }
 
 const App = () => {
-  const nameInput = useField('text')
-  const [name, setName] = useState('')
-  const country = useCountry(name)
+  const content = useField('text')
+  const name = useField('text')
+  const number = useField('text')
 
-  const fetch = (e) => {
-    e.preventDefault()
-    setName(nameInput.value)
+  const [notes, noteService] = useResource('http://localhost:3005/notes')
+  const [persons, personService] = useResource('http://localhost:3005/persons')
+
+ useEffect(() => {
+  noteService.getAll()
+  personService.getAll()
+ }, [])
+
+
+  const handleNoteSubmit = (event) => {
+    event.preventDefault()
+    noteService.create({ content: content.value })
+  }
+ 
+  const handlePersonSubmit = (event) => {
+    event.preventDefault()
+    personService.create({ name: name.value, number: number.value})
   }
 
   return (
     <div>
-      <form onSubmit={fetch}>
-        <input {...nameInput} />
-        <button>find</button>
+      <h2>notes</h2>
+      <form onSubmit={handleNoteSubmit}>
+        <input {...content} />
+        <button>create</button>
       </form>
+      {notes.map(n => <p key={n.id}>{n.content}</p>)}
 
-      <Country country={country} />
+      <h2>persons</h2>
+      <form onSubmit={handlePersonSubmit}>
+        name <input {...name} /> <br/>
+        number <input {...number} />
+        <button>create</button>
+      </form>
+      {persons.map(n => <p key={n.id}>{n.name} {n.number}</p>)}
     </div>
   )
 }
