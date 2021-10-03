@@ -121,8 +121,13 @@ const CreateNew = (props) => {
   const info = useField("info");
   const history = useHistory()
   
-  
-
+  console.log(author)
+  const changeObject = (object) => {
+   const {reset, ...changedObject} = object
+   return changedObject
+  }
+ 
+console.log(changeObject(author))
   const handleSubmit = (e) => {
     e.preventDefault();
     props.addNew({
@@ -141,19 +146,19 @@ const CreateNew = (props) => {
         <div>
           content
           <input
-          {...content}
+         {...changeObject(content)}
           />
         </div>
         <div>
           author
           <input
-          {...author}
+          {...changeObject(author)}
           />
         </div>
         <div>
           url for more info
           <input
-          {...info}
+         {...changeObject(info)}
           />
         </div>
         <button>create</button>
