@@ -100,6 +100,7 @@ return (
 
 const Footer = () => (
   <div>
+    <br />
     Anecdote app for
     <a href="https://courses.helsinki.fi/fi/tkt21009">
       Full Stack -websovelluskehitys
@@ -119,7 +120,9 @@ const CreateNew = (props) => {
   const author = useField("author");
   const info = useField("info");
   const history = useHistory()
-console.log(content)
+  
+  
+
   const handleSubmit = (e) => {
     e.preventDefault();
     props.addNew({
@@ -154,6 +157,12 @@ console.log(content)
           />
         </div>
         <button>create</button>
+        <button onClick={(event) => {
+          event.preventDefault()
+          content.reset();
+          author.reset();
+          info.reset()
+        }}>reset</button>
       </form>
     </div>
   );
