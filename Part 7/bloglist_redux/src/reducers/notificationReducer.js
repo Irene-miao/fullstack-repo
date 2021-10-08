@@ -5,19 +5,36 @@ const notificationReducer = (state = null, action) => {
   case 'NEW_MESSAGE':
     return action.data
   case 'REMOVE_MESSAGE':
-    return state = null
+    return null
   default:
     return state
   }
 }
+let timeoutId
 
-export const notify = (message) => {
-  return {
-    type: 'NEW_MESSAGE',
-    data: {
-      message,
-    },
+export const notify = (message, time) => {
+  return async (dispatch) => {
+    dispatch({
+      type: 'NEW_MESSAGE',
+      data: {
+        message
+      }
+    })
+
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+    }
+
+    timeoutId = setTimeout(() => {
+      dispatch({
+        type: 'REMOVE_MESSAGE'
+      })
+    }, time * 1000)
   }
 }
+
+export const stopNotify = (id) => (
+  { type: 'REMOVE_MESSAGE' }
+)
 
 export default notificationReducer
