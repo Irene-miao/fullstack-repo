@@ -1,19 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-//import Blog from './components/Blog'
+import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
-import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import Users from './components/Users'
-import { initBlogs, create } from './reducers/blogReducer'
+import { initBlogs } from './reducers/blogReducer'
 import { notify } from './reducers/notificationReducer'
 import { setUser } from './reducers/userReducer'
 import User from './components/User'
-
+import Blogs from './components/Blogs'
 
 
 const App = () => {
@@ -73,40 +72,23 @@ const App = () => {
     dispatch(setUser(null))
   }
 
-  const addBlog = async (blogObject) => {
 
-    try {
-      blogFormRef.current.toggleVisibility()
-      dispatch(create(blogObject))
-      dispatch(notify( `a new blog ${blogObject.title} by ${blogObject.author} added`, 5))
-    } catch (error) {
-      dispatch(notify(`${error} `, 'error', 5))
-    }
-  }
-
-
-  const blogFormRef = useRef()
 
   return (
     <Router>
+      <h1>Blogs</h1>
       <div>
-        <h1>Blogs</h1>
-        <div>
-          <Notification  />
-        </div>
-
-        {user === null ? (
-          loginForm()
-        ) : (
-          <div>
-            <p>{user.name} logged in</p>
-            <button id='logout' onClick={() => removeUser()}>logout</button>
-            <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-              <BlogForm createBlog={addBlog} />
-            </Togglable>
-          </div>
-        )}
+        <Notification  />
       </div>
+
+      {user === null ? (
+        loginForm()
+      ) : (
+        <div>
+          <p>{user.name} logged in</p>
+          <button id='logout' onClick={() => removeUser()}>logout</button>
+        </div>
+      )}
       <br></br>
       <Switch>
         <Route path="/users/:id">
@@ -114,6 +96,12 @@ const App = () => {
         </Route>
         <Route path="/users">
           <Users />
+        </Route>
+        <Route path="/blogs/:id">
+          <Blog />
+        </Route>
+        <Route path="/blogs">
+          <Blogs />
         </Route>
       </Switch>
     </Router>
