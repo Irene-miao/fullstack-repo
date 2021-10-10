@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import Blog from './components/Blog'
+//import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import BlogForm from './components/BlogForm'
@@ -12,7 +12,7 @@ import Users from './components/Users'
 import { initBlogs, create } from './reducers/blogReducer'
 import { notify } from './reducers/notificationReducer'
 import { setUser } from './reducers/userReducer'
-
+import User from './components/User'
 
 
 
@@ -20,7 +20,6 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const dispatch = useDispatch()
-  const blogs = useSelector(state => state.blogs)
   const user = useSelector(state => state.user)
 
 
@@ -86,10 +85,6 @@ const App = () => {
   }
 
 
-  const blogsSort = blogs.sort((a,b) => b.likes - a.likes)
-
-  console.log(blogsSort)
-
   const blogFormRef = useRef()
 
   return (
@@ -112,9 +107,10 @@ const App = () => {
           </div>
         )}
       </div>
+      <br></br>
       <Switch>
         <Route path="/users/:id">
-          <Blog />
+          <User />
         </Route>
         <Route path="/users">
           <Users />

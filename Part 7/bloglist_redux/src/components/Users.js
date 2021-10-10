@@ -1,17 +1,18 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Table } from 'react-bootstrap'
-
+import { Link } from 'react-router-dom'
 
 
 const Users = () => {
   const blogs = useSelector(state => state.blogs)
   console.log(blogs)
-  const users = Array.from(new Set(blogs.map((blog) => blog.data?.user[0]?.username)))
+  const users = blogs.map((blog) => blog.data?.user[0])
   console.log(users)
+  const uniqueUsers = users.filter((v, i , a) => a.findIndex(t => (t.id === v.id)) === i)
+  console.log(uniqueUsers)
   const returnLength = (name, object) => {
     const blogs = object.filter((item) => item.data?.user[0]?.username === name)
-    console.log(blogs)
     return blogs.length
   }
   return (
@@ -25,14 +26,12 @@ const Users = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>{users[0]}</td>
-            <td>{returnLength(users[0], blogs)}</td>
-          </tr>
-          <tr>
-            <td> {users[1]}</td>
-            <td>{returnLength(users[1], blogs)}</td>
-          </tr>
+          {uniqueUsers.map((user) =>
+            <tr key={user.id}>
+              <td><Link to={`/users/${user.id}`}>{user.username}</Link></td>
+              <td>{returnLength(user.username, blogs)}</td>
+            </tr>
+          )}
         </tbody>
       </Table>
     </div>
