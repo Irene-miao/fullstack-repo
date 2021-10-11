@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { updateBlog  } from '../reducers/blogReducer'
 import { notify } from '../reducers/notificationReducer'
 import { useParams } from 'react-router-dom'
-
+import { Button } from 'react-bootstrap'
 
 const Blog = () => {
   const user = useSelector(state => state.user)
@@ -48,7 +48,7 @@ const Blog = () => {
       </h2>
       <p><a href={`${blog.data.url}`}>{blog.data?.url}</a></p>
       <p className='likes'>
-        {blog.data?.likes} <button id='like' onClick={addLikes}>like</button>
+        {blog.data?.likes} <Button size='sm' id='like' onClick={addLikes}>like</Button>
       </p>
       <p>added by {blog.data?.user[0]?.username}</p>
     </div>

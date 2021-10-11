@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
@@ -13,7 +13,7 @@ import { notify } from './reducers/notificationReducer'
 import { setUser } from './reducers/userReducer'
 import User from './components/User'
 import Blogs from './components/Blogs'
-
+import { Navbar, Nav, Container, Button } from 'react-bootstrap'
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -75,36 +75,53 @@ const App = () => {
 
 
   return (
-    <Router>
-      <h1>Blogs</h1>
-      <div>
-        <Notification  />
-      </div>
+    <Container>
+      <div className="container">
+        <Router>
+          <Navbar collapseOnSelect expand="lg" bg="dark" variant='dark'>
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+            <Navbar.Collapse id="responsive-navbar-nav">
+              <Nav className="mr-auto">
+                <Nav.Link href="#" as="span">
+                  <Link  to="/blogs">blogs</Link>
+                </Nav.Link>
+                <Nav.Link href="#" as="span">
+                  <Link to="/users">users</Link>
+                </Nav.Link>
+                <Nav.Link href="#" as="span">
+                  {user === null ? (
+                    loginForm()
+                  ) : (
+                    <div className='row'><p>{user.name} logged in</p><Button  variant='light' size='sm' id='logout' onClick={() => removeUser()}>logout</Button></div>
+                  )}
+                </Nav.Link>
+              </Nav>
+            </Navbar.Collapse>
+          </Navbar>
+          <div>
+            <Notification  />
+          </div>
 
-      {user === null ? (
-        loginForm()
-      ) : (
-        <div>
-          <p>{user.name} logged in</p>
-          <button id='logout' onClick={() => removeUser()}>logout</button>
-        </div>
-      )}
-      <br></br>
-      <Switch>
-        <Route path="/users/:id">
-          <User />
-        </Route>
-        <Route path="/users">
-          <Users />
-        </Route>
-        <Route path="/blogs/:id">
-          <Blog />
-        </Route>
-        <Route path="/blogs">
-          <Blogs />
-        </Route>
-      </Switch>
-    </Router>
+
+          <br></br>
+          <Switch>
+            <Route path="/users/:id">
+              <User />
+            </Route>
+            <Route path="/users">
+              <Users />
+            </Route>
+            <Route path="/blogs/:id">
+              <Blog />
+            </Route>
+            <Route path="/blogs">
+              <Blogs />
+            </Route>
+          </Switch>
+
+        </Router>
+      </div>
+    </Container>
   )
 }
 

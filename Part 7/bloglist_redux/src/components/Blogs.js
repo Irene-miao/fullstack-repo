@@ -7,6 +7,8 @@ import { create } from '../reducers/blogReducer'
 import { notify } from '../reducers/notificationReducer'
 
 const Blogs = () => {
+  const dispatch = useDispatch()
+  const blogFormRef = useRef()
   const user = useSelector(state => state.user)
   const blogs = useSelector(state => state.blogs)
   const blogsSort = blogs.sort((a,b) => b.likes - a.likes)
@@ -15,8 +17,11 @@ const Blogs = () => {
   console.log(blogsSort)
   const userBlogs = blogsSort.filter((blog) => blog.data?.user[0]?.username === user.username)
   console.log(userBlogs)
-  const dispatch = useDispatch()
-  const addBlog = async (blogObject) => {
+  if (!blogs && !user) {
+    return null
+  }
+
+  const addBlog = (blogObject) => {
 
     try {
       blogFormRef.current.toggleVisibility()
@@ -27,14 +32,14 @@ const Blogs = () => {
     }
   }
 
-
-  const blogFormRef = useRef()
-
   return (
     <div>
-      <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-        <BlogForm createBlog={addBlog} />
-      </Togglable>
+      <h1>Blogs</h1>
+      <div>
+        <Togglable buttonLabel="create new blog" ref={blogFormRef}>
+          <BlogForm createBlog={addBlog} />
+        </Togglable>
+      </div>
       {userBlogs.map((blog) =>
         <div key={blog.data?.id} className='contact'>
           <p><Link to={`/blogs/${blog.data?.id}`}>{blog.data?.title}</Link></p>
