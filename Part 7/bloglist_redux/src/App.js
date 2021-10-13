@@ -13,7 +13,8 @@ import { notify } from './reducers/notificationReducer'
 import { setUser } from './reducers/userReducer'
 import User from './components/User'
 import Blogs from './components/Blogs'
-import { Navbar, Nav, Container, Button } from 'react-bootstrap'
+import { Navbar, Nav, Button } from 'react-bootstrap'
+import Comment from './components/Comment'
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -75,53 +76,52 @@ const App = () => {
 
 
   return (
-    <Container>
-      <div className="container">
-        <Router>
-          <Navbar collapseOnSelect expand="lg" bg="dark" variant='dark'>
-            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-            <Navbar.Collapse id="responsive-navbar-nav">
-              <Nav className="mr-auto">
-                <Nav.Link href="#" as="span">
-                  <Link  to="/blogs">blogs</Link>
-                </Nav.Link>
-                <Nav.Link href="#" as="span">
-                  <Link to="/users">users</Link>
-                </Nav.Link>
-                <Nav.Link href="#" as="span">
-                  {user === null ? (
-                    loginForm()
-                  ) : (
-                    <div className='row'><p>{user.name} logged in</p><Button  variant='light' size='sm' id='logout' onClick={() => removeUser()}>logout</Button></div>
-                  )}
-                </Nav.Link>
-              </Nav>
-            </Navbar.Collapse>
-          </Navbar>
-          <div>
-            <Notification  />
-          </div>
+    <div className="container">
+      <Router>
+        <Navbar collapseOnSelect expand={true} bg="dark" variant='dark'>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Collapse id="responsive-navbar-nav">
+            <Nav className="me-auto">
+              <Nav.Link href="#" as="span">
+                <Link  to="/blogs">blogs</Link>
+              </Nav.Link>
+              <Nav.Link href="#" as="span">
+                <Link to="/users">users</Link>
+              </Nav.Link>
+              <Nav.Link  href="#" as="span">
+                {user === null ? (
+                  loginForm()
+                ) : (
+                  <div className='row'><p>{user.name} logged in</p><Button  variant='light' size='sm' id='logout' onClick={() => removeUser()}>logout</Button></div>
+                )}
+              </Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
+        <div>
+          <Notification  />
+        </div>
 
 
-          <br></br>
-          <Switch>
-            <Route path="/users/:id">
-              <User />
-            </Route>
-            <Route path="/users">
-              <Users />
-            </Route>
-            <Route path="/blogs/:id">
-              <Blog />
-            </Route>
-            <Route path="/blogs">
-              <Blogs />
-            </Route>
-          </Switch>
+        <br></br>
+        <Switch>
+          <Route path="/users/:id">
+            <User />
+          </Route>
+          <Route path="/users">
+            <Users />
+          </Route>
+          <Route path="/blogs/:id">
+            <Blog />
+            <Comment />
+          </Route>
+          <Route path="/blogs">
+            <Blogs />
+          </Route>
+        </Switch>
+      </Router>
+    </div>
 
-        </Router>
-      </div>
-    </Container>
   )
 }
 
