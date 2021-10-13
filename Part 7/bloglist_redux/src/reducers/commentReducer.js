@@ -7,7 +7,10 @@ const commentReducer = (state = [], action) => {
   switch (action.type) {
   case 'NEW_COMMENT':
     console.log(action)
-    return [...state, action]
+    return [...state.data?.comments, {
+      content: action.data?.content,
+      id: action.data?.id
+    }]
   case 'INIT_COMMENTS':
   {
     const comments =  action
@@ -19,17 +22,17 @@ const commentReducer = (state = [], action) => {
   }
 }
 
-/*export const create = (content) => {
+export const create = (blog, content) => {
   return async dispatch => {
-    console.log(content)
-    const newComment = await commentService.create(content)
+    console.log(blog)
+    const newComment = await commentService.create(blog.data?.id, content)
     console.log(newComment)
     dispatch({
       type: 'NEW_COMMENT',
       data: newComment,
     })
   }
-}*/
+}
 
 export const initComments = (id) => {
   return async dispatch => {

@@ -8,12 +8,12 @@ const commentService = {
     token = `bearer ${newToken}`
   },
 
-  create: async (newObject) => {
+  create: async (id, newObject) => {
     const config = {
       headers: { Authorization: token },
     }
-
-    const response = await axios.post(baseUrl, newObject, config)
+    const object = { content: newObject }
+    const response = await axios.post(`${baseUrl}/${id}/comments`, object, config)
     return response.data
 
   },
