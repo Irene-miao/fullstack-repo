@@ -25,6 +25,11 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initBlogs())
+    const interval=setInterval(() => {
+      dispatch(initBlogs())
+    }, 10000)
+
+    return () => clearInterval(interval)
   }, [dispatch])
 
   useEffect(() => {

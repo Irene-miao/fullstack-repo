@@ -1,52 +1,39 @@
-import React, { useState } from 'react'
-import { Button } from 'react-bootstrap'
-const BlogForm = ({ createBlog }) => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-  const [likes, setLikes] = useState('')
+import React from 'react'
+import { Button, Form } from 'react-bootstrap'
 
+const BlogForm = ({ createBlog }) => {
 
   const addBlog = (event) => {
     event.preventDefault()
     createBlog({
-      title: title,
-      author: author,
-      url: url ,
-      likes: likes,
+      title: event.target.title.value,
+      author: event.target.author.value,
+      url: event.target.url.value ,
+      likes: event.target.likes.value,
     })
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-    setLikes('')
+    event.target.title.value = ''
+    event.target.author.value = ''
+    event.target.url.value = ''
+    event.target.likes.value = ''
   }
 
   return (
     <div>
-      <h3>Create New Blog</h3>
-      <form  onSubmit={addBlog}>
-        <div>
-          title:
-          <input id='title' value={title} onChange={({ target }) => setTitle(target.value)} />
-        </div>
-        <div>
-          author:
-          <input id='author' value={author} onChange={({ target }) => setAuthor(target.value)} />
-        </div>
-        <div>
-          url:
-          <input id='url' value={url} onChange={({ target }) => setUrl(target.value)} />
-        </div>
-        <div>
-          likes:
-          <input id='likes' value={likes} onChange={({ target }) => setLikes(target.value)} />
-        </div>
-
-        <br></br>
-        <div>
-          <Button size='sm' id='create-button' type="submit">create</Button>
-        </div>
-      </form>
+      <h4>Create New Blog</h4>
+      <Form onSubmit={addBlog}>
+        <Form.Group>
+          <Form.Label> title:</Form.Label>
+          <Form.Control id='title' type='text' name='title'  />
+          <Form.Label> author: </Form.Label>
+          <Form.Control id='author' name='author' type='text'  />
+          <Form.Label>url:</Form.Label>
+          <Form.Control id='url' name='url'  />
+          <Form.Label>likes:</Form.Label>
+          <Form.Control id='likes' name='likes'  />
+          <br></br>
+          <Button size='sm' variant='primary' id='create-button' type="submit">create</Button>
+        </Form.Group>
+      </Form>
     </div>
   )
 }
