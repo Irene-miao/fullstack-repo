@@ -1,4 +1,4 @@
-const { ApolloServer, gql } = require('apollo-server')
+const { ApolloServer, UserInputError, gql } = require('apollo-server')
 const { v1: uuid } = require('uuid')
 
 
@@ -111,7 +111,7 @@ type Mutation {
     published: Int!
     genres: [String!]
   ): Book
-  editAuthor(name: String!, setBornTo: Int!): Author
+  editAuthor(name: String!, born: Int!): Author
 }
 `
 
@@ -121,7 +121,9 @@ const resolvers = {
         bookCount: () => books.length,
         authorCount: () => authors.length,
         allBooks: (root, args) =>  {
-          if (args.author && args.genre) {
+          if (!args.author && !args.genre) {
+            return books
+          } else if (args.author && args.genre) {
             const author = books.filter(b => b.author === args.author)
             const filter = author.map(a => {
               if (a.genres.includes(args.genre)) {
@@ -162,20 +164,28 @@ const resolvers = {
     Mutation: {
       addBook: (root, args) => {
         const id = uuid()
-        const book = { ...args, id: id}
-        books = books.concat(book)
-        const author = {
-          name: args.author,
-          id: id
+        const author = books.filter(b => b.author === args.author) 
+        const title = books.filter(b => b.title === args.title)
+        if (author && title) {
+          throw new UserInputError('Author and title must be unique', {
+            invalidArgs: args.author, 
+          })
+        } else {
+          const book = { ...args, id: id}
+          books = books.concat(book)
+          const author = {
+            name: args.author,
+            id: id
+          }
+          authors = authors.concat(author)
+          return book
         }
-        authors = authors.concat(author)
-        return book
       },
       editAuthor: (root, args) => {
         const author = authors.find(a => a.name === args.name)
         if (author) {
-          const edited = {...author, born: args.setBornTo}
-          authors = authors.concat(edited)
+          const edited = {...author, born: args.born}
+          authors = authors.map(a => a.name === args.name ? edited : a)
           return edited
         } else {
           return null
