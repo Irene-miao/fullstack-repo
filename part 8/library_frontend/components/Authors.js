@@ -3,10 +3,11 @@ import { useQuery, useMutation } from '@apollo/client'
 import { SET_BIRTH, ALL_AUTHORS } from '../queries'
 
 
+
 const Authors = (props) => {
-    const result = useQuery(ALL_AUTHORS)
-    console.log(result)
-    const [ name, setName ] = useState('')
+    const { data, loading, error } = useQuery(ALL_AUTHORS)
+    console.log(error)
+    const [ name, setName ] = useState(null)
     const [ born, setBorn ] = useState('')
 
     const [ editAuthor ] = useMutation(SET_BIRTH, {
@@ -26,7 +27,7 @@ const Authors = (props) => {
             setBorn('')
         }
 
-    if (result.loading) {
+    if (loading) {
         return <div>loading...</div>
     }
 
@@ -34,7 +35,13 @@ const Authors = (props) => {
         return null
     }
     
-    
+    const names = data.allAuthors.map(a => {
+        return {
+            label: a.name,
+            value: a.name
+        }
+    })
+    console.log(names)
 
     return (
         <div>
@@ -46,7 +53,7 @@ const Authors = (props) => {
                         <th>born</th>
                         <th>books</th>
                     </tr>
-                    {result.data?.allAuthors.map(a=>
+                    {data.allAuthors.map(a=>
                         <tr key={a.id}>
                             <td>{a.name}</td>
                             <td>{a.born}</td>
@@ -59,10 +66,11 @@ const Authors = (props) => {
             <h2>Set Birth Year</h2>
             <form onSubmit={submit}>
         <div>
-            name
-            <input value={name}
-            onChange={({target}) => setName(target.value)}
-            />
+            <select value={name} onChange={({target}) => setName(target.value)}>
+            {names.map((n) => (
+                <option value={n.value}>{n.label}</option>
+            ))}
+            </select>
         </div>
         <div>
             born
