@@ -129,7 +129,8 @@ type Mutation {
     name: String!
     born: Int
   ): Author!
-  editAuthor(name: String!, born: Int!): Author
+  editAuthor(name: String!, born: Int!): Author!
+  editBook(title: String!, author: ID!): Book!
 }
 `
 
@@ -139,7 +140,23 @@ const resolvers = {
         bookCount: () => Book.collection.countDocuments(),
         authorCount: () => Author.collection.countDocuments(),
         allBooks: async (root, args) =>  {
-           if (args.author && args.genre) {
+          if (args.author && args.genre){
+            const author = await Author.findOne({name: args.author}).exec()
+            const books = await Book.find({author: author._id, genres: args.genre}).exec()
+            return books
+          } else if (args.author){
+            const author = await Author.findOne({name: args.author}).exec()
+            const books = await Book.find({ author: author._id}).exec()
+            return books
+          } else if (args.genre){
+            const books = await Book.find( {genres:args.genre}).exec()
+            return books
+          } else {
+            const books = await Book.find({}).populate('author').exec()
+            return books
+          }
+          const books = await Book.find({})
+           /*if (args.author && args.genre) {
             const books = await Book.find({ author: args.author}).exec()
             const filter = books.map(a => {
               if (a.genres.includes(args.genre)) {
@@ -161,7 +178,7 @@ const resolvers = {
             const books = await Book.find({}).exec()
             console.log(books)
             return books
-          }
+          }*/
         },
         allAuthors: async () => {
           const authors = await Author.find({}).exec()
@@ -175,6 +192,13 @@ const resolvers = {
       author: async (root) => await Author.findById(root.author).exec(),
       id: (root) => root.id,
       genres: (root) => root.genres
+    },
+    Author: {
+      bookCount: async (root) => {
+        const author = await Book.find({ author: root._id}).exec()
+        console.log(author)
+        return author.length
+}
     },
     Mutation: {
       addBook: async (root, args) => {
@@ -208,17 +232,29 @@ const resolvers = {
             return author
           },
         editAuthor: async (root, args) => {
-          const author = await Author.findOne({ name: args.name}).exec()
-          author.born = args.born
+          //const author = await Author.findOne({ name: args.name})
+          //author.born = args.born
          try {
-           await author.save()
+           await Author.findOneAndUpdate({name: args.name}, {born:args.born}, {new: true})
+           //await author.save()
          } catch (error) {
            throw new UserInputError(error.message, {
              invalidArgs: args,
            })
          }
-         console.log(author)
-         return author
+         //console.log(author)
+         //return author
+        },
+        editBook: async (root, args) => {
+         
+         try {
+           await Book.findOneAndUpdate({title: args.title}, {author: args.author}, {new: true})
+           //await author.save()
+         } catch (error) {
+           throw new UserInputError(error.message, {
+             invalidArgs: args,
+           })
+         }
         }
       },
     }
