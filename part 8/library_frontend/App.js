@@ -48,6 +48,7 @@ const App = () => {
 
       <Books
         show={page === 'books'}
+        setError={notify}
       />
 
       <NewBook
