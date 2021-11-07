@@ -16,22 +16,21 @@ const Books = (props) => {
         return null
     }
 
-    const styleObj = { paddingRight: 20}
-
+    
     return (
         <div>
             <h2>Books</h2>
             <table>
                 <tbody>
-                    <tr>
-                        <th></th>
-                        <th>author</th>
-                        <th>published</th>
+                    <tr style={{ textAlign: "left" }}>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Published</th>
                     </tr>
                     {result.data?.allBooks.map(b =>
                         <tr key={b.id}>
                             <td>{b.title}</td>
-                            <td>{b.author}</td>
+                            <td>{b.author?.name}</td>
                             <td>{b.published}</td>
                         </tr>
                         )}
