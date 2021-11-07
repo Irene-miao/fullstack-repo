@@ -7,7 +7,7 @@ import { SET_BIRTH, ALL_AUTHORS } from '../queries'
 const Authors = (props) => {
     const { data, loading, error } = useQuery(ALL_AUTHORS)
     console.log(error)
-    const [ name, setName ] = useState(null)
+    const [ name, setName ] = useState('')
     const [ born, setBorn ] = useState('')
 
     const [ editAuthor ] = useMutation(SET_BIRTH, {
@@ -68,14 +68,14 @@ const Authors = (props) => {
         <div>
             <select value={name} onChange={({target}) => setName(target.value)}>
             {names.map((n) => (
-                <option value={n.value}>{n.label}</option>
+                <option key={n.label} value={n.value}>{n.label}</option>
             ))}
             </select>
         </div>
         <div>
             born
             <input value={born}
-            onChange={({target}) => setBorn(parseInt(target.value))}
+            onChange={({target}) => setBorn(parseInt(target.value, 10))}
             />
         </div>
         <button type='submit'>update author</button>
