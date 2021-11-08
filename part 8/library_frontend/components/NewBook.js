@@ -7,14 +7,24 @@ const NewBook = (props) => {
 const [title, setTitle] = useState('')
 const [author, setAuthor] = useState('')
 const [published, setPublished] = useState('')
+const [born, setBorn] = useState('')
 const [genre, setGenre] = useState('')
 const [genres, setGenres] = useState([])
 
 const [ createBook ] = useMutation(CREATE_BOOK, {
-    refetchQueries: [{ query: ALL_BOOKS}],
     onError: (error) => {
         console.log(error)
         props.setError(error.message)
+    },
+    update: (store, response) => {
+        const dataInStore = store.readQuery({ query: ALL_BOOKS })
+        store.writeQuery({
+            query: ALL_BOOKS,
+            data: {
+                ...dataInStore,
+                allBooks: [...dataInStore.allBooks, response.data.addBook]
+            }
+        })
     }
 })
 
@@ -27,10 +37,11 @@ const submit = (event) => {
     event.preventDefault()
 
     console.log('add book...')
-    createBook({ variables: { title, author, published, genres}})
+    createBook({ variables: { title, author, published, genres, born}})
     setTitle('')
     setAuthor('')
     setPublished('')
+    setBorn('')
     setGenre('')
     setGenres([])
 }
@@ -60,7 +71,13 @@ console.log(published)
                <div>
                    published
                    <input value={published} 
-                   onChange={({target}) => setPublished(parseInt(target.value))}
+                   onChange={({target}) => setPublished(parseInt(target.value, 10))}
+                   />
+               </div>
+               <div>
+                   Author birthdate
+                   <input value={born} 
+                   onChange={({target}) => setBorn(parseInt(target.value, 10))}
                    />
                </div>
                <div>

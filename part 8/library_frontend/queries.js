@@ -29,11 +29,12 @@ query findBooks($author: String, $genre: String){
 `
 
 export const CREATE_BOOK = gql`
-mutation createBook($title: String!, $author: String!, $published: Int!, $genres: [String!]) {
+mutation createBook($title: String!, $author: String!, $published: Int!, $genres: [String!], $born: Int) {
     addBook(
         title: $title
         author: $author
         published: $published
+        born: $born
         genres: $genres
     ) {
         title

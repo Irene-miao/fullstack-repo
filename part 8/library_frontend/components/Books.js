@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
-import { useQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 import { ALL_BOOKS } from '../queries'
 
 
 
 const Books = ({ setError, show}) => {
     const [genre, setGenre] = useState('')
-    const result = useQuery(ALL_BOOKS, {
-        variables: { genre },
+    const [findBooks, result] = useLazyQuery(ALL_BOOKS, {
         onError: (error) => {
             console.log(error)
             setError(error.message)
@@ -28,7 +27,7 @@ const Books = ({ setError, show}) => {
     return (
         <div>
             <h2>Books</h2>
-            in genre {genre}
+            in genre <strong>{genre}</strong>
             <table>
                 <tbody>
                     <tr style={{ textAlign: "left" }}>
@@ -47,34 +46,54 @@ const Books = ({ setError, show}) => {
             </table>
 <div>
 <button onClick={() => {
-       setGenre('')}} >all</button>
+       setGenre('')
+       findBooks({})
+       }} >all</button>
    <button onClick={() => {
        setGenre('')
-       setGenre("refactoring")}} >refactoring</button>
+       setGenre("refactoring")
+       findBooks({ variables: {genre: genre }})
+       }} >refactoring</button>
     <button onClick={() => {
        setGenre('')
-       setGenre("design")}} >design</button>
+       setGenre("design")
+       findBooks({ variables: {genre: genre }})
+       }} >design</button>
     <button onClick={() => {
        setGenre('')
-       setGenre("classic")}} >classic</button>
+       setGenre("classic")
+       findBooks({ variables: {genre: genre }})
+       }} >classic</button>
     <button onClick={() => {
        setGenre('')
-       setGenre("crime")}} >crime</button>
+       setGenre("crime")
+       findBooks({ variables: {genre: genre }})
+       }} >crime</button>
     <button onClick={() => {
        setGenre('')
-       setGenre("patterns")}} >patterns</button>
+       setGenre("patterns")
+       findBooks({ variables: {genre: genre }})
+       }} >patterns</button>
     <button onClick={() => {
        setGenre('')
-       setGenre("baking")}} >baking</button>
+       setGenre("baking")
+       findBooks({ variables: {genre: genre }})
+       }} >baking</button>
     <button onClick={() => {
        setGenre('')
-       setGenre("agile")}} >agile</button>
+       setGenre("agile")
+       findBooks({ variables: {genre: genre }})
+       }} >agile</button>
     <button onClick={() => {
        setGenre('')
-       setGenre("revolution")}} >revolution</button>
+       setGenre("revolution")
+       findBooks({ variables: {genre: genre }})
+       }} >revolution</button>
     <button onClick={() => {
        setGenre('')
-       setGenre("testing")}} >testing</button>
+       setGenre("testing")
+       findBooks({ variables: {genre: genre }})
+       }} >testing</button>
 </div>
         </div>
     )
