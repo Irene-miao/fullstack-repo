@@ -4,9 +4,9 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import Notify from './components/Notify'
 import LoginForm from './components/LoginForm'
-import { useApolloClient } from '@apollo/client'
+import { useApolloClient, useSubscription } from '@apollo/client'
 import Recommend from './components/Recommend'
-
+import { ALL_BOOKS, BOOK_ADDED } from './queries'
 
 
 const App = () => {
@@ -22,6 +22,28 @@ const App = () => {
     }, 10000)
   }
 
+  // Update addedBook in Apollo cache to render to screen immediately
+   const updateCacheWith = (addedBook) => {
+     // Check if addedBook exist in data
+    const includedIn = (set, object) => set.map(b => b.id).includes(object.id)
+    // If do not exist, add it
+     const dataInStore = client.readQuery({ query: ALL_BOOKS })
+   if (!includedIn(dataInStore.allBooks, addedBook)) {
+     client.writeQuery({
+       query: ALL_BOOKS,
+       data: { allBooks : dataInStore.allBooks.concat(addedBook)}
+     })
+   }
+   }
+
+   // Receive addedBook data from subscription
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      const addedBook = subscriptionData.data.bookAdded
+      notify(`${addedBook.title} added`)
+      updateCacheWith(addedBook)
+    }
+  })
 
     const logout = () => {
       setToken(null)
@@ -57,6 +79,7 @@ const App = () => {
       <NewBook
         show={page === 'add'}
         setError={notify}
+        updateCacheWith={updateCacheWith}
       />
 
       <LoginForm

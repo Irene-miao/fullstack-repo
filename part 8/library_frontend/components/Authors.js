@@ -4,18 +4,19 @@ import { SET_BIRTH, ALL_AUTHORS } from '../queries'
 
 
 
-const Authors = (props) => {
-    const { data, loading, error } = useQuery(ALL_AUTHORS)
-    console.log(error)
+const Authors = ({ setError, show, updateCacheWith}) => {
+    const result = useQuery(ALL_AUTHORS)
     const [ name, setName ] = useState('')
     const [ born, setBorn ] = useState('')
 
     const [ editAuthor ] = useMutation(SET_BIRTH, {
-            refetchQueries: [{ query: ALL_AUTHORS}],
             onError: (error) => {
                 console.log(error)
-                props.setError(error.message)
-            }
+                setError(error.message)
+            },
+            update: (store, response) => {
+                updateCacheWith(response.data.editAuthor)
+             }
         })
 
     const submit = (event) => {
@@ -27,15 +28,15 @@ const Authors = (props) => {
             setBorn('')
         }
 
-    if (loading) {
+    if (result.loading) {
         return <div>loading...</div>
     }
 
-    if (!props.show) {
+    if (!show) {
         return null
     }
-    
-    const names = data.allAuthors.map(a => {
+    console.log(result)
+    const names = result.data?.allAuthors.map(a => {
         return {
             label: a.name,
             value: a.name
@@ -53,7 +54,7 @@ const Authors = (props) => {
                         <th>born</th>
                         <th>books</th>
                     </tr>
-                    {data.allAuthors.map(a=>
+                    {result.data?.allAuthors.map(a=>
                         <tr key={a.id}>
                             <td>{a.name}</td>
                             <td>{a.born}</td>
