@@ -11,10 +11,10 @@ app.get('/bmi', (req, res) => {
     console.log(req.query)
     let height = req.query.height;
     let weight = req.query.weight;
-    if (height && weight) {
+    if (!isNaN(Number(height)) && !isNaN(Number(weight))) {
        return res.json({
-            'height': height,
-            'weight': weight,
+            'height': Number(height),
+            'weight': Number(weight),
             'bmi': calculateBmi(Number(height), Number(weight))
         });
     } else {
