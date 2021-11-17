@@ -1,4 +1,4 @@
-interface Result {
+export interface Result {
     numberOfDays: number;
     numberOfTrainingDays: number;
     originalTargetValue: number;
@@ -10,71 +10,74 @@ interface Result {
 
 interface Training {
     hours: Array<number>;
-    rating: number;
+    givenTarget: number;
 }
 
-const arguments = (args: Array<string>): Training => {
+ const Arguments = (args: Array<string>): Training => {
     if (args.length < 4) throw new Error('Period too short');
     if (args.length > 32) throw new Error('There are only 31 days in a month');
 
    
-
+        if (args) {
             return {
-                hours: [Number(args[2]),Number(args[3]), Number(args[4]), Number(args[5]), Number(args[6]), Number(args[7]), Number(args[8]), Number(args[9]), Number(args[10])],
-                rating: Number(args[11])
-            }
-      
-    }
+                hours: [Number(args[0]),Number(args[1]), Number(args[2]), Number(args[3]), Number(args[4]), Number(args[5]), Number(args[6])],
+                givenTarget: Number(args[7])
+            };
+        } else {
+            throw new Error('parameters missing');
+        }
+    };
     
 
 
 
-const calculateExercises = (hours: Array<number>, rating: number): Result => {
-    const trainingDays = hours.filter(h => Number(h) !== 0).length;
+ export const calculateExercises = (hours: Array<number>, givenTarget: number): Result => {
+    const trainingDays = hours.filter(h => h !== 0).length;
     const sum = hours.reduce((a, b) => a+b);
-    const target = Number(sum)/ trainingDays;
+    const result = sum / trainingDays;
 
-        switch (rating) {
-            case 1:
+        if (givenTarget < 3) {
             return {
                 numberOfDays: hours.length,
                 numberOfTrainingDays: trainingDays,
-                originalTargetValue: 2,
-                calculatedAverageTime: target,
-                isTargetMet: target === 2,
-                rating: rating,
-                ratingDescription: 'Work harder'
+                originalTargetValue: givenTarget,
+                calculatedAverageTime: result,
+                isTargetMet: result > givenTarget,
+                rating: 3,
+                ratingDescription: 'You hit traget'
                     };
-            case 2:
+                   } else if (givenTarget < 2) {
                 return {
                     numberOfDays: hours.length,
                     numberOfTrainingDays: trainingDays,
-                    originalTargetValue: 2,
-                    calculatedAverageTime: target,
-                    isTargetMet: target === 2,
-                    rating: rating,
+                    originalTargetValue: givenTarget,
+                    calculatedAverageTime: result,
+                    isTargetMet: result > givenTarget,
+                    rating: 2,
                     ratingDescription: 'Almost there'
                         };
-            case 3: 
+                    } else if ( givenTarget < 1 ) {
             return   {
                 numberOfDays: hours.length,
                 numberOfTrainingDays: trainingDays,
-                originalTargetValue: 2,
-                calculatedAverageTime: target,
-                isTargetMet: target === 2,
-                rating: rating,
-                ratingDescription: 'Hit target'
-                    };  
-            default:
-                throw new Error('Rating from 1 to 3 only');
+                originalTargetValue: givenTarget,
+                calculatedAverageTime: result,
+                isTargetMet: result < givenTarget,
+                rating: 1,
+                ratingDescription: 'Work harder'
+                    };
+
+                } else  {
+                throw new Error('Target from 1 to 3 only or missing');
             } 
-    }
+    };
+
 
 try {
-        const { hours, rating } = arguments(process.argv);
-        console.log(calculateExercises(hours, rating));
+        const { hours, givenTarget } = Arguments(process.argv);
+        console.log(calculateExercises(hours, givenTarget));
 } catch (error: unknown) {
-    let errorMessage = 'Something happened'
+    let errorMessage = 'Something happened';
     if (error instanceof Error) {
         errorMessage += ' Error: ' + error.message;
     }
