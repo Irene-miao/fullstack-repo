@@ -7,7 +7,8 @@ Content-Type: application/json
 {
     "name": "Testing2",
     "dateOfBirth": "2020-02-02",
-    "gender": "female",
-    "occupation": "Tester2"
+    "gender": "transgender",
+    "occupation": "Tester2",
+    "ssn": "98765-22B"
     
 }
