@@ -1,0 +1,13 @@
+GET http://localhost:3001/api/patients
+
+###
+POST http://localhost:3001/api/patients
+Content-Type: application/json
+
+{
+    "name": "Testing2",
+    "dateOfBirth": "2020-02-02",
+    "gender": "female",
+    "occupation": "Tester2"
+    
+}

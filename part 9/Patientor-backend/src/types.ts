@@ -10,7 +10,7 @@ export interface DiagnoseEntry {
 
 export type Patient = Omit<PatientEntry, 'ssn'>;
 
-
+export type NewPatientEntry = Omit<PatientEntry, 'id'>;
 
 export interface PatientEntry {
     id: string;
