@@ -1,26 +1,35 @@
-
 import * as React from 'react'
+import Part from './Part';
+import {CoursePart} from '../types'
 
 interface Course {
- name: string,
- exerciseCount: number
+    course: CoursePart[];
 }
 
-interface ContentProps {
-    course: Course[]
-}
+const assertNever = (value: never): never => {
+    throw new Error(`Unhandled discriminated union member: ${JSON.stringify(value)}`)
+};
 
-const Content = (props: ContentProps)=> {
-    console.log(props.course)
-    console.log(props)
-    const course = props.course
-    return (
-        <div>
-      <p><strong>{course[0].name}</strong> : {course[0].exerciseCount} exercises</p>
-      <p><strong>{course[1].name}</strong> : {course[1].exerciseCount} exercises</p>
-      <p><strong>{course[2].name}</strong> : {course[2].exerciseCount} exercises</p>
-        </div>
-    )
+const Content = (props: Course)=> {
+  console.log(props)
+
+   const parts = props.course?.map((c) => {
+       switch (c.name) {
+            case "Fundamentals":
+               return <Part key={c.name} parts={c} />;
+            case "Advanced":
+                return <Part key={c.name} parts={c} />;
+            case "Using props to pass data":
+                return <Part key={c.name} parts={c} />;
+            case "Deeper type usage":
+                return <Part key={c.name} parts={c} />;
+            case "Backend development":
+                return <Part key={c.name} parts={c} />;
+            default:
+                return assertNever(c);
+       }
+   });
+   return <React.Fragment>{parts}</React.Fragment>;
 }
 
 export default Content
