@@ -2,14 +2,15 @@ import { PatientEntry } from '../src/types';
 import  toNewPatientEntry  from '../src/utils';
 
 
-const data = [
+const information = [
     {
         "id": "d2773336-f723-11e9-8f0b-362b9e155667",
         "name": "John McClane",
         "dateOfBirth": "1986-07-09",
         "ssn": "090786-122X",
         "gender": "male",
-        "occupation": "New york city cop"
+        "occupation": "New york city cop",
+        
     },
     {
         "id": "d2773598-f723-11e9-8f0b-362b9e155667",
@@ -45,10 +46,17 @@ const data = [
     }
 ];
 
-const patientEntries: PatientEntry [] = data.map(obj => {
+// Apply type guard toNewPatientEntry to data
+export const patientEntries: PatientEntry [] = information.map(obj => {
     const object = toNewPatientEntry(obj) as PatientEntry;
     object.id = obj.id;
     return object;
 });
 
-export default patientEntries;
+export const patients: PatientEntry [] = information.map(info => {
+    const object = {...info, entries: []} as PatientEntry;
+    object.id = info.id;
+    return object
+})
+
+

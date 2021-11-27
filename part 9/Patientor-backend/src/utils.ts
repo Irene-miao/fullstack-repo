@@ -49,15 +49,17 @@ const parseOccupation = (occupation: unknown): string => {
     return occupation;
 };
 
-type Fields = { name: unknown, dateOfBirth: unknown, ssn: unknown, gender: unknown, occupation: unknown };
 
-const toNewPatientEntry = ({ name, dateOfBirth, ssn, gender, occupation} : Fields): NewPatientEntry => {
+type Fields = { name: unknown, dateOfBirth: unknown, ssn: unknown, gender: unknown, occupation: unknown, entries?: unknown };
+//@ts-ignore
+const toNewPatientEntry = ({ name, dateOfBirth, ssn, gender, occupation, entries} : Fields): NewPatientEntry => {
     const newEntry: NewPatientEntry = {
         name: parseName(name),
         dateOfBirth: parseDateBirth(dateOfBirth),
         ssn: parseSsn(ssn),
         gender: parseGender(gender),
-        occupation: parseOccupation(occupation)
+        occupation: parseOccupation(occupation),
+        entries: [],
     };
 
     return newEntry;
