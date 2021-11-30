@@ -19,13 +19,7 @@ const getPatientEntries = (): Patient[] => {
 };
 
 const findById = (id: string): PatientEntry | undefined => {
-    let entry = patientEntries.find(p => p.id === id);
-    if (entry?.hasOwnProperty('entries') === false) {
-        entry = {
-            ...entry, entries: [],
-        } as PatientEntry;
-  
-    }
+    let entry = patients.find(p => p.id === id);
     return entry;
 };
 
