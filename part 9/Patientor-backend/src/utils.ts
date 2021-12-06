@@ -1,4 +1,4 @@
-import { NewPatientEntry, Gender, EntrywithoutId , SickLeave, Discharge, Diagnose, BaseEntry} from "./types";
+import { NewPatientEntry, Gender, EntrywithoutId , SickLeave, Discharge, Diagnose, BaseEntry, HealthCheckRating} from "./types";
 
 const isString = (text: unknown): text is string => {
     return typeof text === 'string' || text instanceof String;
@@ -66,9 +66,7 @@ export const toNewPatientEntry = ({ name, dateOfBirth, ssn, gender, occupation, 
     return newEntry;
 };
 
-const isNumber = (text: unknown): text is number => {
-    return typeof text === 'number' || text instanceof Number;
-};
+
 
 const parseDate = (date: unknown): string => {
     if (!date || !isString(date) || !isDate(date)) {
@@ -93,8 +91,12 @@ const parseDescription = (description: unknown): string => {
     return description;
 };
 
-const parseRating = (healthCheckRating: unknown): number  => {
-    if (!healthCheckRating|| !isNumber(healthCheckRating)) {
+const isRating = (param: any):param is HealthCheckRating => {
+    return Object.values(HealthCheckRating).includes(param);
+};
+
+const parseRating = (healthCheckRating: unknown): HealthCheckRating  => {
+    if (!healthCheckRating|| !isRating(healthCheckRating)) {
         throw new Error('Incorrect or missing healthCheckRating: ' + healthCheckRating);
     }
     return healthCheckRating;

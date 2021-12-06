@@ -27,7 +27,7 @@ patientRouter.post('/', (req, res) => {
     console.log(addedEntry);
     res.json(addedEntry);
 } catch (error: unknown) {
-    let errorMessage = 'Something happened'
+    let errorMessage = ''
     if (error instanceof Error) {
         errorMessage += ' Error: ' + error.message;
     }
@@ -46,7 +46,7 @@ patientRouter.post('/:id/entries', (req, res) => {
         res.json(editEntry);
 
     } catch (error: unknown) {
-        let errorMessage = 'Something happened'
+        let errorMessage = ''
         if (error instanceof Error) {
             errorMessage += ' Error: ' + error.message;
         }
