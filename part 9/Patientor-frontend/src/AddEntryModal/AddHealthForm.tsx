@@ -88,6 +88,7 @@ export const AddEntryForm = ({ onSubmit, onCancel } : Props ) => {
               label="healthCheckRating"
               name="healthCheckRating"
               component={NumberField}
+            
               min={0}
               max={3}
             />

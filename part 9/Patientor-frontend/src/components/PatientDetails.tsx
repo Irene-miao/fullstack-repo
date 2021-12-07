@@ -7,9 +7,18 @@ import HealthCheck from './HealthCheck';
 import Hospital from './Hospital';
 import OccupationalEntry from './OccupationalEntry';
 import axios from "axios";
-import { EntryFormValues } from "../AddEntryModal/AddEntryForm";
+import { HealthFormValues} from "../AddEntryModal/AddHealthForm";
+import { HospitalFormValues } from "../AddEntryModal/AddHospitalForm";
+import { OccupationalFormValues } from "../AddEntryModal/AddOccupationalForm";
+
 import AddEntryModal from "../AddEntryModal";
+
 import { apiBaseUrl } from "../constants";
+
+export type Value = 
+| HealthFormValues
+| HospitalFormValues
+| OccupationalFormValues;
 
 const PatientDetails = () => {
     const [{ patients, diagnoses}, dispatch] = useStateValue();
@@ -29,7 +38,8 @@ const PatientDetails = () => {
     setError(undefined);
   };
 
-  const submitNewEntry = (values: EntryFormValues) => {
+  
+  const submitNewEntry = (values: Value) => {
     Object.values(patients).map(async (patient: Patient) => {
       if (patient.id === id) {
         try {
@@ -46,7 +56,7 @@ const PatientDetails = () => {
         } catch (e) {
           console.error(e.response?.data || 'Unknown Error');
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          setError(e.response?.data?.error || 'Unknown error');
+          setError(e.response?.data || 'Unknown Error');
         }
       }
     }); 
@@ -82,13 +92,15 @@ const PatientDetails = () => {
                 <p>occupation: {patient.occupation}</p>
               
                 <h3>entries</h3>
+                <div>
                 <AddEntryModal
         modalOpen={modalOpen}
         onSubmit={submitNewEntry}
         error={error}
         onClose={closeModal}
       />
-      <Button onClick={() => openModal()}>Add New Entry</Button>
+      <Button onClick={() => openModal()}>Add Health Entry</Button>
+      </div>
                 <div>
                 {Object.values(patient.entries)?.map((entry: Entry) => { 
                     console.log(entry);
